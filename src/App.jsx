@@ -1,16 +1,33 @@
-import { useState } from 'react'
-import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar'
+import { useEffect, useState } from 'react'
+import Axios from 'axios'
+import './App.css'
+import {BrowserRouter as Router, Route,Routes } from 'react-router-dom'
+import Login from './components/Login'
+import posPage from './components/posPage'
+import popUPgarment from './components/PopUPgarment'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  
+
 
   return (
-    <>
-      <Navbar/>
-      <Sidebar/>
-      <h1>Hi belle</h1>
-    </>
+  <Router>
+    <div className='App'>
+
+      <Routes>
+        <Route exact path='/' Component={Login}/>
+
+        <Route exact path='/pos' Component={posPage}/>
+        
+    
+
+      </Routes>
+
+
+    </div>
+  </Router>
+   
   )
 }
 
