@@ -45,27 +45,49 @@ const Login = () => {
 
 
     return ( 
-<div className='App'>
-    
 
+    <div className="loginbox">
+      {/* <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p> */}
+      <img src={logoplaceholder} className="logo"/>
+      <h1>Login</h1>
+      <p>Welcome! Log in to your account to access iWASHIFY.</p>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="email" className="inputlabel">Email Address:</label>
+        <input
+          className="input"
+          type="email"
+          id="email"
+          ref={userRef}
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          required
+        />
 
-    <div className="Login">
+        <label htmlFor="password" className="inputlabel">Password:</label>
+        <input
+          className="input"
+          type="password"
+          id="password"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          required
+        />
 
-    <h1>LOGIN</h1>
-    Email:<input type="text" placeholder='EMAIL...'
-    onChange={(e)=>{setEmail(e.target.value);
-    }}
-    />
-    <br /> 
-    Password:<input type="password" placeholder='PASSWORD...'
-    onChange={(e)=>{setPassword(e.target.value);
-    }}
-    />
-    <br /> 
-    <button onClick={login}>LOGIN</button>
+        <label htmlFor="login-as" className="inputlabel">Login as:</label>
+        <select value={select} onChange={(e) => setSelect(e.target.value)}>
+          <option value="Customer">Customer</option>
+          <option value="Vendor">Vendor</option>
+          <option value="Other">Other</option>
+        </select>
 
-    </div>
-   
+        <button className="submitlogin">Login</button>
+      </form>
+      <p>
+        Don't have an account? 
+        <span className="line">
+          <Link to="/signup"> Sign Up</Link>
+        </span>
+      </p>   
     <h1>{loginStatus}</h1>  
     </div>
      );

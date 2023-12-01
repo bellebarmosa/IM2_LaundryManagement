@@ -113,3 +113,58 @@ table.greyGridTable thead th:first-child {
 table.greyGridTable tfoot td {
   font-size: 14px;
 }
+
+/* LOGIN PAGE */
+
+body {
+  background-color: #FFCC70;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="text"], input[type="password"], input[type="email"], textarea, select {
+  display:block;
+  margin:0 auto;
+  background-color: #E5E8CD;
+  border-color: #E5E8CD;
+  border-radius: 8px;
+  color:#0D597F;
+  height: 30px;
+  width: 400px;
+  border:none;
+  outline:none;
+}
+
+.loginbox {
+  color:#0D597F;
+  background-color: #FFF5CF;
+  border-radius: 50px;
+  display:flex;
+  flex-direction: column;
+  margin:auto;
+  width:500px;
+  box-shadow: 0 4px 4px grey;
+}
+
+.inputlabel {
+  margin-left: auto;
+  text-align: left;
+  font-size: 12pt;
+}
+
+.submitlogin, .button1 {
+  background-color: #0D597F;
+  border-radius: 50px;
+}
+
+.logo {
+  width:150px;
+  height:150px;
+  margin:0 auto;
+}
