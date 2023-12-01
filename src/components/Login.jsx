@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Axios from 'axios'
 import '../App.css'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const Login = () => {
@@ -9,6 +9,7 @@ const Login = () => {
     const [password,setPassword] = useState('')
     const navigate = useNavigate();
     const[loginStatus,setLoginStatus]= useState("")
+    const [select, setSelect] = useState();
   
     Axios.defaults.withCredentials = true;
   
@@ -48,16 +49,16 @@ const Login = () => {
 
     <div className="loginbox">
       {/* <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p> */}
-      <img src={logoplaceholder} className="logo"/>
+      {/* <img src={logoplaceholder} className="logo"/> */}
       <h1>Login</h1>
       <p>Welcome! Log in to your account to access iWASHIFY.</p>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={login}>
         <label htmlFor="email" className="inputlabel">Email Address:</label>
         <input
           className="input"
           type="email"
           id="email"
-          ref={userRef}
+          // ref={userRef}
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           required
@@ -85,7 +86,7 @@ const Login = () => {
       <p>
         Don't have an account? 
         <span className="line">
-          <Link to="/signup"> Sign Up</Link>
+          <Link to="./components/Signup"> Sign Up</Link>
         </span>
       </p>   
     <h1>{loginStatus}</h1>  

@@ -168,3 +168,21 @@ input[type="text"], input[type="password"], input[type="email"], textarea, selec
   height:150px;
   margin:0 auto;
 }
+
+/* SIGNUP PAGE */
+
+.signupbox {
+  width:500px;
+  border: solid #FFF5CF;
+  color:#0D597F;
+  background-color:#FFF5CF;
+  border-radius:50px;
+  display:flex;
+  flex-direction: column;
+  margin:auto;
+  box-shadow: 0 4px 4px grey;
+}
+
+.submitlogin:hover, .button1:hover {
+  background-color: #0b435e;
+}
