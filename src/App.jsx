@@ -1,16 +1,10 @@
-import { useState } from 'react'
-import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar'
+import React from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <Navbar/>
-      <Sidebar/>
-      <h1>Hi belle</h1>
-    </>
+    <h1 className="bg-red-400">
+      App
+    </h1>
   )
 }
 
