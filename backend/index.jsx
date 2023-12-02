@@ -3,8 +3,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const userController = require("./controllers/userController");
-const orderController = require("./controllers/orderController");
+const userRoutes = require("./routes/userRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -29,10 +29,11 @@ app.use(session({
     },
 }));
 
-app.use('/user', userController);
-app.use('/order', orderController);
+app.use('/user', userRoutes);
+app.use('/order', orderRoutes);
+
 
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Running server on ${PORT}`);
-});
+})

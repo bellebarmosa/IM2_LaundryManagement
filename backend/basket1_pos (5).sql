@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2023 at 10:42 PM
+-- Generation Time: Dec 02, 2023 at 08:26 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -55,7 +55,7 @@ CREATE TABLE `employees` (
   `employee_phone` varchar(50) NOT NULL,
   `employee_eMail` varchar(50) NOT NULL,
   `employee_role` varchar(50) NOT NULL,
-  `employee_password` varchar(50) NOT NULL
+  `employee_password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -63,7 +63,8 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`employee_ID`, `employee_name`, `employee_phone`, `employee_eMail`, `employee_role`, `employee_password`) VALUES
-(1, 'admin', '092922', 'admin@admin', 'admin', '1234');
+(5, 'Kyle1', '112', 'admin', 'admin', '$2b$10$xx9TFwCQ.xF9D9py6/IBtOwHHPxKmP2wTLY6nYPqr4wZmflu0wY5.'),
+(6, 'admin', '112', 'admin@admin', 'admin', '$2b$10$QGrbhK0hBRS2iTfHRADDT.6TC0EJthjf0fpPZEqEKYf6C50P2k22i');
 
 -- --------------------------------------------------------
 
@@ -85,7 +86,11 @@ INSERT INTO `garments` (`garment_ID`, `garment_name`, `price`) VALUES
 (1, 'Shirt', 20.00),
 (2, 'Pants', 15.00),
 (3, 'Socks', 10.00),
-(4, 'Suit', 100.00);
+(4, 'Suit', 100.00),
+(5, 'under garments', 40.00),
+(6, 'Bag', 60.00),
+(7, 'Barong Man – Long Sleeves', 100.00),
+(8, 'Dress Leather.', 60.00);
 
 -- --------------------------------------------------------
 
@@ -104,10 +109,15 @@ CREATE TABLE `garmentsinorder` (
 --
 
 INSERT INTO `garmentsinorder` (`orderDetails_ID`, `garment_ID`, `qty`) VALUES
-(53, 1, 1),
-(53, 3, 1),
-(54, 4, 2),
-(54, 3, 1);
+(67, 1, 1),
+(67, 2, 1),
+(67, 5, 1),
+(68, 4, NULL),
+(69, 8, NULL),
+(70, 1, 4),
+(70, 2, 4),
+(70, 3, 3),
+(71, 8, NULL);
 
 -- --------------------------------------------------------
 
@@ -151,18 +161,22 @@ CREATE TABLE `itemsused` (
 CREATE TABLE `orderdetails` (
   `OrderDetails_ID` int(11) NOT NULL,
   `order_ID` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
+  `quantity` decimal(10,2) NOT NULL,
   `order_price` decimal(10,2) NOT NULL,
-  `service_ID` int(11) NOT NULL
+  `service_ID` int(11) NOT NULL,
+  `chargePer` enum('Weight','Piece') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orderdetails`
 --
 
-INSERT INTO `orderdetails` (`OrderDetails_ID`, `order_ID`, `quantity`, `order_price`, `service_ID`) VALUES
-(53, 62, 2, 30.00, 1),
-(54, 62, 1, 50.00, 4);
+INSERT INTO `orderdetails` (`OrderDetails_ID`, `order_ID`, `quantity`, `order_price`, `service_ID`, `chargePer`) VALUES
+(67, 69, 6.00, 165.00, 1, 'Weight'),
+(68, 69, 1.00, 150.00, 2, 'Piece'),
+(69, 69, 1.00, 110.00, 4, 'Piece'),
+(70, 70, 6.00, 165.00, 1, 'Weight'),
+(71, 70, 2.00, 170.00, 2, 'Piece');
 
 -- --------------------------------------------------------
 
@@ -188,7 +202,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_ID`, `customer_ID`, `employee_ID`, `order_status`, `order_date`, `order_pickup`, `order_total`, `order_paidAmount`, `payment_method`, `Remarks`) VALUES
-(62, 3, 1, 'Pending', '2023-11-25', '2023-12-09', 110.00, 200.00, NULL, NULL);
+(69, 1, 6, 'Pending', '2023-12-02', '2023-12-03', 425.00, 500.00, NULL, NULL),
+(70, 3, 6, 'Pending', '2023-12-02', '2023-12-04', 335.00, 400.00, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -213,19 +228,18 @@ CREATE TABLE `services` (
   `service_ID` int(11) NOT NULL,
   `service_name` varchar(50) NOT NULL,
   `service_description` varchar(255) NOT NULL,
-  `service_price` decimal(10,2) NOT NULL,
-  `chargePer` enum('Weight','Piece') DEFAULT NULL
+  `service_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`service_ID`, `service_name`, `service_description`, `service_price`, `chargePer`) VALUES
-(1, 'Wash & Fold ', 'Charge per Kg', 30.00, 'Weight'),
-(2, 'Dry Clean', 'Clean dry', 0.00, 'Piece'),
-(3, 'Wash-Dry-Press', 'wdp', 60.00, 'Weight'),
-(4, 'HANDWASH-DRY-FOLD', 'a', 50.00, 'Weight');
+INSERT INTO `services` (`service_ID`, `service_name`, `service_description`, `service_price`) VALUES
+(1, 'Wash & Fold ', 'Charge per Kg', 30.00),
+(2, 'Dry Clean', 'Clean dry', 50.00),
+(3, 'Wash-Dry-Press', 'wdp', 60.00),
+(4, 'HANDWASH-DRY-FOLD', 'a', 50.00);
 
 -- --------------------------------------------------------
 
@@ -366,13 +380,13 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `employee_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `employee_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `garments`
 --
 ALTER TABLE `garments`
-  MODIFY `garment_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `garment_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `inventory`
@@ -390,13 +404,13 @@ ALTER TABLE `itemsused`
 -- AUTO_INCREMENT for table `orderdetails`
 --
 ALTER TABLE `orderdetails`
-  MODIFY `OrderDetails_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `OrderDetails_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `order_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `perpieceservices`
