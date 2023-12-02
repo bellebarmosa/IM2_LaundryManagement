@@ -9,46 +9,47 @@ const Login = () => {
     const [password,setPassword] = useState('')
     const navigate = useNavigate();
     const[loginStatus,setLoginStatus]= useState("")
-    const [select, setSelect] = useState();
   
     Axios.defaults.withCredentials = true;
   
-    const login = ()=>{
-      Axios.post("http://localhost:3001/user/login",{
+    const login = (e) => {
+      e.preventDefault(); // Prevent the default form submission behavior
+      Axios.post('http://localhost:3001/user/login', {
         employee_eMail: email,
         employee_password: password,
-      }).then((response)=>{
-        console.log(response);
+      })
+        .then((response) => {
+          console.log(response);
   
-        if(response.data.message){
-          setLoginStatus(response.data.message);
-        }else{
-          console.log(response.data[0]);
-          //setLoginStatus(response.data[0].employee_name);
-           navigate("/pos");
-        }
-
-      });
+          if (response.data.message) {
+            setLoginStatus(response.data.message);
+          } else {
+            console.log(response.data[0]);
+            // setLoginStatus(response.data[0].employee_name);
+            navigate('/pos'); // Navigate to /pos after successful login
+          }
+        })
+        .catch((error) => {
+          console.error('Login error:', error);
+          setLoginStatus('An error occurred during login.');
+        });
     };
   
-    useEffect(()=>{
-      Axios.get("http://localhost:3001/user/login").then((response)=>{
-        if(response.data.loggedIn == true){
-          //setLoginStatus(response.data.user[0].employee_name)
-          //console.log(response.data)
-          navigate("/pos");
-        }
-        
-      });
   
-    },[])
+    useEffect(() => {
+      Axios.get('http://localhost:3001/user/login').then((response) => {
+        if (response.data.loggedIn === true) {
+          navigate('/pos');
+        }
+      });
+    }, [navigate]);
   
 
 
     return ( 
 
     <div className="loginbox">
-      {/* <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p> */}
+      {/* // logo on top of login text */}
       {/* <img src={logoplaceholder} className="logo"/> */}
       <h1>Login</h1>
       <p>Welcome! Log in to your account to access iWASHIFY.</p>
@@ -74,19 +75,12 @@ const Login = () => {
           required
         />
 
-        <label htmlFor="login-as" className="inputlabel">Login as:</label>
-        <select value={select} onChange={(e) => setSelect(e.target.value)}>
-          <option value="Customer">Customer</option>
-          <option value="Vendor">Vendor</option>
-          <option value="Other">Other</option>
-        </select>
-
         <button className="submitlogin">Login</button>
       </form>
       <p>
         Don't have an account? 
         <span className="line">
-          <Link to="./components/Signup"> Sign Up</Link>
+          <Link to="/signup"> Sign Up</Link>
         </span>
       </p>   
     <h1>{loginStatus}</h1>  

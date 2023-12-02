@@ -16,13 +16,24 @@ function Signup() {
   const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [select, setSelect] = useState();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // submit form
+
+    // password match validation
+    if (password !== confirmPassword) {
+      console.error("Passwords do not match.");
+      return;
+    }
+
+    // form submission
     console.log({
-      // wait
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+      password,
     });
   };
 
@@ -80,21 +91,12 @@ function Signup() {
           required
         />
 
-        <div className="form-group">
-          <label>Register as:</label>
-          <select value={select} onChange={(e) => setSelect(e.target.value)} required>
-            <option value="Customer">Customer</option>
-            <option value="Vendor">Vendor</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
         <button className="button1" type="submit">
           Create Account
         </button>
 
         <p>
-          Already have an account? <Link to="./components/Login">Log in</Link>
+          Already have an account? <Link to="/">Log in</Link>
         </p>
       </form>
     </div>
