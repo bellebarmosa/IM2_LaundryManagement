@@ -169,6 +169,15 @@ input[type="text"], input[type="password"], input[type="email"], textarea, selec
   margin:0 auto;
 }
 
+.error-box {
+  /* background-color:rgb(206, 53, 53); */
+  width:400px;
+  margin:auto;
+  color:#0b435e;
+  border-radius: 50px;
+  padding:10px;
+}
+
 /* SIGNUP PAGE */
 
 .signupbox {

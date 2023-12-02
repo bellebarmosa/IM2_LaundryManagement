@@ -47,10 +47,11 @@ const Login = () => {
 
 
     return ( 
-
+      <>
+      <p className="error-box">{loginStatus}</p>
     <div className="loginbox">
-      {/* // logo on top of login text */}
-      {/* <img src={logoplaceholder} className="logo"/> */}
+    {/* logo on top of login text
+    <img src={logoplaceholder} className="logo"/> */}
       <h1>Login</h1>
       <p>Welcome! Log in to your account to access iWASHIFY.</p>
       <form onSubmit={login}>
@@ -82,9 +83,9 @@ const Login = () => {
         <span className="line">
           <Link to="/signup"> Sign Up</Link>
         </span>
-      </p>   
-    <h1>{loginStatus}</h1>  
+      </p>
     </div>
+    </>
      );
 }
  
