@@ -20,7 +20,7 @@ function Signup() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // password matching
+    // password match 
     if (password !== confirmPassword) {
       console.error("Passwords do not match.");
       return;
