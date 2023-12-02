@@ -13,44 +13,44 @@ const Login = () => {
   
     Axios.defaults.withCredentials = true;
   
-    const login = ()=>{
-      Axios.post("http://localhost:3001/user/login",{
+    const login = (e) => {
+      e.preventDefault(); // Prevent the default form submission behavior
+      Axios.post('http://localhost:3001/user/login', {
         employee_eMail: email,
         employee_password: password,
-      }).then((response)=>{
-        console.log(response);
+      })
+        .then((response) => {
+          console.log(response);
   
-        if(response.data.message){
-          setLoginStatus(response.data.message);
-        }else{
-          console.log(response.data[0]);
-          //setLoginStatus(response.data[0].employee_name);
-           navigate("/pos");
-        }
-
-      });
+          if (response.data.message) {
+            setLoginStatus(response.data.message);
+          } else {
+            console.log(response.data[0]);
+            // setLoginStatus(response.data[0].employee_name);
+            navigate('/pos'); // Navigate to /pos after successful login
+          }
+        })
+        .catch((error) => {
+          console.error('Login error:', error);
+          setLoginStatus('An error occurred during login.');
+        });
     };
   
-    useEffect(()=>{
-      Axios.get("http://localhost:3001/user/login").then((response)=>{
-        if(response.data.loggedIn == true){
-          //setLoginStatus(response.data.user[0].employee_name)
-          //console.log(response.data)
-          navigate("/pos");
+    useEffect(() => {
+      Axios.get('http://localhost:3001/user/login').then((response) => {
+        if (response.data.loggedIn === true) {
+          navigate('/pos');
         }
-        
       });
-  
-    },[])
+    }, [navigate]);
   
 
 
     return ( 
+<div className='App'>
+    
 
-    <div className="loginbox">
-      {/* <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p> */}
-      {/* <img src={logoplaceholder} className="logo"/> */}
-      <h1>Login</h1>
+<h1>Login</h1>
       <p>Welcome! Log in to your account to access iWASHIFY.</p>
       <form onSubmit={login}>
         <label htmlFor="email" className="inputlabel">Email Address:</label>
@@ -81,7 +81,9 @@ const Login = () => {
           <option value="Other">Other</option>
         </select>
 
-        <button className="submitlogin">Login</button>
+        <button type="submit"className="submitlogin">
+          Login
+          </button>
       </form>
       <p>
         Don't have an account? 

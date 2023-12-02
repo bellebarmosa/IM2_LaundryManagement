@@ -21,7 +21,7 @@
     //     customer_eMail: 'JohnDoe@gmail.com'
     //   }
 //////////////////////////////////////////////////
-    const newOrder
+    const newOrder || service cart
     // [ sample order //array of objects
     //     {
     //       service_ID: 1,
