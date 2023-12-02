@@ -4,32 +4,46 @@ import { useNavigate } from "react-router-dom";
 import '../App.css'
 import React from 'react';
 import PopUPgarment from './PopUPgarment';
+import PopUPservice from './PopUPservice'
 
-//TO DO 
-//DELETE
-//EDIT
+//TO DO
+//REDO USER AUTH DO JWT
+//charePer is null in the  datebase fix it later
 //SEARCH
+//ON PAYMENT CALCULATE FOR TAX??
+//BUG WITH EDIT AND TOTAL
+//
 
 
 
-const posPage = () => {
+const PosPage = () => {
+
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [services,setwServices] = useState ([]);
     const [open,setOpen] = useState (false);
-    const [garmentCart,setgarmentCart] = useState([]);
+    const [openServices,setOpenServices]  = useState (false);
+    const [orderCart,setorderCart] = useState([]);
     const [serviceCart,setServiceCart] = useState([]);
     const [savedService,setsavedService] = useState();
+    const [savedGarment,setsavedGarment] = useState();
+    const [garments, setGarments] = useState([]);
     const [customers,setCustomers] = useState([]);
     const [selectedCus,setSelectedCus] = useState(null);
     const [total, setTotal] = useState(0);
     const [pickUpDate,setPickUpDate] = useState('');
     const [paidAmount,setPaidAmount] = useState(0);
     const [change,setChange]= useState(0);
+    const [toEdit,setToEdit] = useState(null);
+    const [charge,setCharge] = useState();
+
+    const [isToggleOn, setToggleOn] = useState(false);
+
+ 
 
     Axios.defaults.withCredentials = true;
 
-
+///////////////////////////////////////////////////find a way to merge the useEffect to make it look clean
     useEffect(()=>{ //sets the logged in user and redirect if not loggedIN
       Axios.get("http://localhost:3001/user/login")
       .then((response)=>{
@@ -44,7 +58,6 @@ const posPage = () => {
   
     },[])
 
-
     useEffect(()=>{ //retrieve services
       Axios.get("http://localhost:3001/order/services")
       .then((response)=>{
@@ -53,15 +66,23 @@ const posPage = () => {
         }else{
           
           setwServices(response.data);
-         
         }
-
       })
-      
-      
     },[])
 
-    
+    useEffect(() => {
+      // Retrieve data garments
+      Axios.get('http://localhost:3001/order/garments')
+        .then((response) => {
+          if (response.err) {
+            console.log(response.err);
+          } else {
+            setGarments(response.data);
+          }
+        });
+    }, []);
+  
+
     useEffect(()=>{
       Axios.get('http://localhost:3001/order/customers')
       .then((response)=>{
@@ -72,8 +93,6 @@ const posPage = () => {
         }
       })
     },[])
-
-
 
     useEffect(() => {
       // Calculate the total when serviceCart changes
@@ -88,43 +107,73 @@ const posPage = () => {
       const newChange = (paidAmount-total);
       setChange(newChange);
 
-    },[paidAmount,total])
+      setCharge(isToggleOn ? 'Piece' : 'Weight');
 
+    },[paidAmount,total,isToggleOn])
 
+    useEffect(() => {
+      // Calculate the total when serviceCart changes
+      const newTotal = serviceCart.reduce((acc, ordered) => acc + ordered.amount, 0);
+      setTotal(newTotal);
+    }, [serviceCart]);
+  
+//////////////////////////////////////////////
 
+    const handleDeleteService = (index) => {
+      const newServiceCart = [...serviceCart];
+      newServiceCart.splice(index, 1); // Remove the service at the specified index
+      setServiceCart(newServiceCart);
+    };
 
 
     function onServiceCLick(service) {
       setOpen(!open);
-
       setsavedService(service);  //to "save" what service was selected  
+   
+    }
+
+    function onClothesClick(garmentItem){
+      setsavedGarment(garmentItem)
+      
+      setOpenServices(!openServices);
     }
 
     function addService() {
       setOpen(!open);
-    
       let newServiceCart = [...serviceCart];
-     
-      if (garmentCart.length !== 0) {
-        let newService = {
-          ...savedService,
-          garmentsIn: [...garmentCart], // Use the copied version of garmentCart
-          qty:0,
-          amount:0
-
+    
+      if (toEdit != null) {
+        // Handle the case when editing a service at a specific index
+        newServiceCart[toEdit] = {
+          ...newServiceCart[toEdit],
+          garmentsIn: [...orderCart], // Update garmentsIn with the new orderCart
+          qty: 0,
+          amount: 0,
         };
-        newServiceCart.push(newService);
-        setServiceCart(newServiceCart);
-
-        setgarmentCart([]); //set it back to empty since it is back assigned to a service
+        setToEdit(null);
+      } else {
+        // Handle the case when adding a new service
+        if (orderCart.length !== 0) {
+          let newService = {
+            ...savedService,
+            chargePer: charge,
+            garmentsIn: [...orderCart],
+            qty: 0,
+            amount: 0,
+          };
+          newServiceCart.push(newService);
+        }
       }
+      setToEdit(null);
+      setorderCart([]); // Set it back to empty since it is now assigned to a service
+      setServiceCart(newServiceCart);
     }
+    
   
 
   function addGarment(garment) {
-  
     console.log(garment);
-    let newCart = [...garmentCart]; // Copy the existing cart to avoid mutating state directly
+    let newCart = [...orderCart]; // Copy the existing cart to avoid mutating state directly
     let found = false;
   
     newCart.forEach((clothing, index) => {
@@ -145,23 +194,35 @@ const posPage = () => {
       newCart.push(addingGarment);
     }
   
-    setgarmentCart(newCart);
+    setorderCart(newCart);
     console.log(newCart);
 
 
   }
 
-    function handleQtyChange(index, event) {
-      const newQty = event.target.value;
-      const newServiceCart = [...serviceCart];
-      const updatedService = {
-        ...newServiceCart[index],
-        qty: newQty,
-        amount: newQty * newServiceCart[index].service_price,
-      };
-      newServiceCart[index] = updatedService;
-      setServiceCart(newServiceCart);
+  function handleQtyChange(index, event) {
+    const newQty = parseFloat(event.target.value);
+    const newServiceCart = [...serviceCart];
+    const updatedService = {
+      ...newServiceCart[index],
+      qty: newQty,
+      amount: calculateAmount(newServiceCart[index], newQty),
+    };
+    newServiceCart[index] = updatedService;
+    setServiceCart(newServiceCart);
+  }
+
+  const calculateAmount = (ordered, newQty) => {
+    if (ordered.chargePer === "Weight") {
+      return newQty * ordered.service_price;
+    } else if (ordered.chargePer === "Piece") {
+      // Assuming ordered.garmentsIn has only one garment
+      const garmentPrice = ordered.garmentsIn[0].price;
+      return  ordered.service_price + Number(garmentPrice *newQty) ;
     }
+    return 0;
+  };
+
 
     function handleConfirmOrder(){ ///confirm order
       Axios.post("http://localhost:3001/order/addOrder", { 
@@ -174,6 +235,7 @@ const posPage = () => {
       .then((response)=>{
         console.log(response);
       })
+
     }
 
     function changeCustomer(e) {
@@ -184,25 +246,97 @@ const posPage = () => {
       console.log(selectedCus)
     }
     
+    function handleEditService (index){
+
+      setorderCart(serviceCart[index].garmentsIn);
+      setToEdit(index);      
+     
+      setOpen(!open)
     
+    };
+    
+    const handleToggle = () => {
+      setToggleOn(!isToggleOn);
+    };
+
+
+
+  const addServiceToCart = (selectedService) => {
+    // Add the selected service to the order cart
+    let newServiceCart = [...serviceCart];
+    let newService = {
+      ...selectedService,
+      chargePer: charge,
+      garmentsIn: [savedGarment],
+      qty: 0,
+      amount: 0,
+      // Add the selected service
+    };
+    newServiceCart.push(newService);
+    setServiceCart(newServiceCart);
+  };
+  
     return (  
         <div className="pos">
             <h1>POS </h1>
             { user && <h1>{user.employee_name}</h1>}
 
+            {isToggleOn ? <h2>Charge per Piece</h2> : <h2>Charge per Weight</h2>}
+            <div className={`wide-slider-container ${isToggleOn ? 'on' : 'off'}`} onClick={handleToggle}>
+      <div className="toggle-label">Weight</div>
+      <div className={`wide-slider-track ${isToggleOn ? 'on' : 'off'}`}>
+        <div className="wide-slider-thumb"></div>
+      </div>
+      <div className="toggle-label">Per Piece</div>
+      <div>
+        {/* Display content based on the toggle state */}
+        
+      </div>
+    </div>
+
+
 
           <div className="wrapper">
 
-            <div className="Wservice">
-              {services && services.filter(services => services.chargePer === "Weight").map(weightServices => (
+      {isToggleOn ?    <div className="clothes-container">
+          {garments && garments.map((garmentsItem) => (
+            <div className="clothes" key={garmentsItem.garment_ID} onClick={()=>onClothesClick(garmentsItem)} > 
+              <h2>{garmentsItem.garment_name}</h2>
+            </div>
+          ))}
+        </div>
+  
+      : 
+      
+      <div className="Wservice">
+              {services && services.map(weightServices => (
                
                   <div className="serve" key = {weightServices.service_ID} onClick={()=>onServiceCLick(weightServices)}>
                  <h2>{weightServices.service_name}</h2>
                   </div>
               ))}
-            </div>
-            <PopUPgarment trigger={open} setOpen={setOpen} addGarment={addGarment}  addService={addService} garmentCart={garmentCart} setGarmentCart={setgarmentCart}/>
+            </div>}
+
+
+
+            <PopUPgarment
+                trigger={open}
+                setOpen={setOpen}
+                addGarment={addGarment}
+                addService={addService}
+                orderCart={orderCart}
+                setorderCart={setorderCart}/>
           </div>
+
+          <PopUPservice
+           trigger={openServices}
+           setOpen={setOpenServices}
+           orderCart={orderCart}
+           setorderCart={setorderCart}
+           addService={addServiceToCart}/>
+
+
+
           
           <div className="selectCustomer">
           <select value={selectedCus ? selectedCus.customer_ID : ''} onChange={changeCustomer}>
@@ -214,9 +348,10 @@ const posPage = () => {
         </option>
              ))}
         </select>
-
         <h1>{selectedCus ? selectedCus.customer_name : ''}</h1>
         </div>
+
+
 
         <div className="selectDate">
           <h3>PICKUP DATE:</h3>
@@ -224,7 +359,6 @@ const posPage = () => {
 
           <h1>{pickUpDate}</h1>
         </div>
-        
 
 
 
@@ -245,8 +379,29 @@ const posPage = () => {
           {serviceCart &&
             serviceCart.map((ordered, index) => (
               <tr key={index}>
+                
                 <td>
-                  {ordered.service_name} <br /> Contents
+                  {ordered.chargePer === "Weight" ? 
+                  <div className="edit-service" 
+                  onClick={() => handleEditService(index)}>
+                {ordered.service_name} <br /> 
+                <p style={{ color: "blue" , fontSize: "15px" }}>
+                [See content]
+                </p>
+                </div>
+                  : 
+
+                  <div className="edit-service">
+                     {ordered.service_name}
+                     <br />
+                     <h3>
+                     {ordered.garmentsIn[0].garment_name}
+                     </h3>
+                  </div>
+                    }
+               
+
+                  
                 </td>
                 <td>{ordered.chargePer}</td>
                 <td>{ordered.service_price}</td>
@@ -255,11 +410,14 @@ const posPage = () => {
                     type="number"
                     placeholder={ordered.qty}
                     onChange={(event) => handleQtyChange(index, event)}
+                    step="0.5"
                   />
                 </td>
                 <td>{ordered.amount}</td>
                 <td>
-                  <button>delete</button>
+                <button onClick={() => handleDeleteService(index)}>
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -276,4 +434,4 @@ const posPage = () => {
   );
 };
  
-export default posPage;
+export default PosPage;

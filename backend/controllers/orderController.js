@@ -77,9 +77,9 @@ router.post("/addOrder", async (req, res) => {
     
         for (const orderDetails of newOrder) {
           const insertOrderDetailsQuery =
-            "INSERT INTO `orderdetails`(`order_ID`, `quantity`, `order_price`, `service_ID`) VALUES ?";
-          const bulkOrderDetails = [
-            [orderID, orderDetails.qty, orderDetails.amount, orderDetails.service_ID],
+            "INSERT INTO `orderdetails`(`order_ID`, `quantity`, `order_price`, `service_ID`,`chargePer`) VALUES ?";
+          const bulkOrderDetails = [                                                          //charePer is null in the  datebase fix it later
+            [orderID, orderDetails.qty, orderDetails.amount, orderDetails.service_ID,orderDetails.chargePer],
           ];
     
           const result2 = await db.queryAsync(insertOrderDetailsQuery, [bulkOrderDetails]);
