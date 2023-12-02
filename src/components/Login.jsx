@@ -35,11 +35,12 @@ const Login = () => {
         });
     };
   
-  
-    useEffect(() => {
-      Axios.get('http://localhost:3001/user/login').then((response) => {
-        if (response.data.loggedIn === true) {
-          navigate('/pos');
+    useEffect(()=>{
+      Axios.get("http://localhost:3001/user/login").then((response)=>{
+        if(response.data.loggedIn == true){
+          //setLoginStatus(response.data.user[0].employee_name)
+          //console.log(response.data)
+          navigate("/pos");
         }
       });
     }, [navigate]);
@@ -50,7 +51,7 @@ const Login = () => {
       <>
       <p className="error-box">{loginStatus}</p>
     <div className="loginbox">
-    {/* logo on top of login text
+      {/* logo on top of login text
     <img src={logoplaceholder} className="logo"/> */}
       <h1>Login</h1>
       <p>Welcome! Log in to your account to access iWASHIFY.</p>
@@ -75,8 +76,7 @@ const Login = () => {
           value={password}
           required
         />
-
-        <button className="submitlogin">Login</button>
+        <button type="submit"className="submitlogin">Login</button>
       </form>
       <p>
         Don't have an account? 
