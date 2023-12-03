@@ -8,7 +8,7 @@ const Navbar = () => {
   const email = 'admin@usc.edu.ph'//BACK END MAKE ME DYNAMIC
 
   return (
-    <div className='flex flex-row h-auto bg-fadedYellow items-center pl-8 p-3'>
+    <div className='flex flex-row h-auto bg-brightYellow items-center pl-4 p-3 rounded-t-3xl'>
       <div className='flex flex-row items-center justify-start w-2/4'>
         <div className="text-darkBlue text-5xl font-black">{pageTitle}</div>
       </div>

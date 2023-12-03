@@ -9,6 +9,9 @@ export default {
         "brightYellow": '#FFFADD',
         "fadedYellow": "#FFDFA4"
       },
+      fontFamily: {
+        'alegreya-sans': ['Alegreya Sans SC', 'sans-serif'],
+      },
     },
   },
   plugins: [],
