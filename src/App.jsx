@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 
 const App = () => {
   const userType = 'admin';//BACKEND CHANGE ME
@@ -27,7 +28,8 @@ const App = () => {
         <Navbar navbarData={ navbarData }/>
         
       </div> */}
-      <SignUp/>
+      {/* <SignUp/> */}
+      <Login/>
     </div>
   )
 }
