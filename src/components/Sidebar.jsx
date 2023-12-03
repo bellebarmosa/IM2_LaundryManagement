@@ -149,9 +149,9 @@ const Sidebar = ({ userType }) => {
   return (
     <div className='flex flex-col items-center w-fit'>
 
-      <img src={Logo} className='w-28 rounded-3xl'/>
-      <p className='font-semibold text-darkBlue text-5xl font-alegreya-sans '>iWashify</p>
-      <p className='font-medium text-xs text-darkBlue'>POINT OF SALE SYSTEM</p>
+      <img src={Logo} className='w-28 rounded-3xl select-none'/>
+      <p className='font-semibold text-darkBlue text-5xl font-alegreya-sans select-none'>iWashify</p>
+      <p className='text-xs text-black select-none font-bold tracking-widest'>POINT OF SALE SYSTEM</p>
 
       <div className='flex flex-col items-start pt-4 gap-2'>
 
@@ -160,15 +160,18 @@ const Sidebar = ({ userType }) => {
                     key={ key } 
                     onClick={ ()=>{ window.location.pathname = val.link } } 
                     //Change onclick() so that when the div of the item is clicked, it changes the body and the navbar
-                    className='flex flex-row items-center select-none hover:bg-brightYellow h-fit w-full rounded-full p-2'
+                    className='flex flex-row items-center select-none h-fit w-full rounded-full py-2 px-6 hover:bg-brightYellow '
                   >{" "}
               { val.icon }
-              <p className='text-darkBlue text-2xl pl-3'>{ val.title }</p>
+              <p className='text-darkBlue text-2xl pl-3 font-semibold'>{ val.title }</p>
             </div>
           })
         }
 
-          <div className='flex flex-row items-center select-none hover:bg-brightYellow w-full rounded-full p-2' /*onClick={()=>{window.location.pathname = val.link}} CHANGE THIS TO MAKE LOGOUT FUNCTIONAL*/ >
+          <div  
+            className='flex flex-row items-center select-none h-fit w-full rounded-full py-2 px-6 hover:bg-brightYellow ' 
+            //onClick={()=>{window.location.pathname = val.link}} CHANGE THIS TO MAKE LOGOUT FUNCTIONAL 
+          >
             <LiaSignOutAltSolid  size={30} color={"#D4092E"} style={{ strokeWidth: 0.8 }}/>
             <p className='text-warningRed font-bold text-2xl pl-3'>Logout</p>
           </div>
