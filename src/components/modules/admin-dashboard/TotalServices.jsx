@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import Axios from 'axios'
 
 const TotalServicesComponent = () => {
-  const [totalServices, setTotalServices] = useState(0);
+  const [totalServices, setTotalServices] = useState([]);
+  const [counter,setCounter] = useState(0);
 
-  useEffect(() => {
-    // Fetch total services from the backend
-    fetch('http://localhost:3001/services')
-      .then((response) => response.json())
-      .then((data) => setTotalServices(data.totalServices))
-      .catch((error) => console.error('Error:', error));
-  }, []);
+  useEffect(()=>{ //retrieve services
+    Axios.get("http://localhost:3001/order/services")
+    .then((response)=>{
+      if(response.err){
+        console.log(response.err)
+      }else{
+        setTotalServices(response.data);
+      }
+    })
+  },[])
 
+  console.log(totalServices);
   return (
     <div>
       <h1>Total Services</h1>
-      <p>{totalServices}</p>
+      <p>{totalServices.length}</p> 
+      {/* {totalServices && totalServices.map(service=>(
+        <h2>{counter}</h2>
+      ))} */}
     </div>
   );
 };

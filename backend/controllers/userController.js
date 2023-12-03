@@ -14,10 +14,66 @@ router.get('/profile', (req, res) => {
     }
 });
 
+router.get('/employees', async (req,res)=>{
+    db.query("SELECT * FROM employees", (err, result) => {
+        if (err) {
+            res.send({ err: err });
+        } else {
+            if (result.length > 0) {
+                res.send(result);
+            } else {
+                res.send({ message: "No customers found" });
+            }
+        }
+    });
+
+})
+router.put('/edit/:employeeID', async (req, res) => {
+    try {
+      const employeeID = req.params.employeeID;
+      const updatedEmployee = req.body;
+  
+      //Update where employee_ID matches
+      const updateEmployeeQuery = `
+        UPDATE employees
+        SET
+          employee_name = ?,
+          employee_phone = ?,
+          employee_eMail = ?,
+          employee_role = ?,
+          employee_password = ?
+        WHERE employee_ID = ?
+      `;
+  
+      db.query(
+        updateEmployeeQuery,
+        [
+          updatedEmployee.employee_name,
+          updatedEmployee.employee_phone,
+          updatedEmployee.employee_eMail,
+          updatedEmployee.employee_role,
+          updatedEmployee.employee_password,
+          employeeID,
+        ],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send({ error: 'Internal Server Error' });
+          } else {
+            res.send(result);
+          }
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
+  });
+
 router.post('/register', async (req, res) => {
   
     try {
-        console.log("here")
+     
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
@@ -28,7 +84,7 @@ router.post('/register', async (req, res) => {
             employee_role: req.body.role,
             employee_password: hashedPassword
         }
-        console.log("here")
+       
 
         const insertIntoEmployee =
         "INSERT INTO `employees`(`employee_name`, `employee_phone`, `employee_eMail`, `employee_role`, `employee_password`) VALUES (?, ?, ?, ?, ?)";
@@ -51,7 +107,7 @@ router.post('/register', async (req, res) => {
             })
     } catch {
        
-        res.status(500).send({ error: "HELP"});
+        res.status(500).send({ error: "ERR"});
         
     }
 })

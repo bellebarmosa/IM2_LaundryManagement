@@ -8,11 +8,10 @@ import PopUPservice from './PopUPservice'
 
 //TO DO
 //REDO USER AUTH DO JWT
-//charePer is null in the  datebase fix it later
 //SEARCH
 //ON PAYMENT CALCULATE FOR TAX??
 //BUG WITH EDIT AND TOTAL
-//
+
 
 
 

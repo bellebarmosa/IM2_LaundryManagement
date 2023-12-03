@@ -19,6 +19,57 @@ router.get("/services", (req, res) => {
     });
 });
 
+router.post('/services',async (req,res)=>{
+    try{
+        let addService = "INSERT INTO `services`(`service_name`, `service_description`, `service_price`) VALUES (? , ? , ?)";
+        const service_name= req.body.service_name;
+        const service_description = req.body.service_description;
+        const service_price = req.body.service_price;
+
+        db.query(addService,
+            [service_name,service_description,service_price],
+            (err,result)=>{
+                if (err) {
+                    console.error(err);  // Log the error for debugging
+                    res.status(500).send({ error: 'Internal Server Error' });
+                } else {
+                    res.send(result);
+                }
+        })
+    }catch{
+        res.status(500).send({ error: "ERR DID NOT UPLOAD"});
+
+    }
+    })
+
+    router.put('/editService/:serviceID', async (req, res) => {
+        try {
+          const { serviceID } = req.params;
+          const { service_name, service_description, service_price } = req.body;
+      
+          const updateServiceQuery =
+            'UPDATE services SET service_name = ?, service_description = ?, service_price = ? WHERE service_ID = ?';
+      
+          db.query(
+            updateServiceQuery,
+            [service_name, service_description, service_price, serviceID],
+            (err, result) => {
+              if (err) {
+                console.error(err);
+                res.status(500).send({ error: 'Internal Server Error' });
+              } else {
+                res.send(result);
+              }
+            }
+          );
+        } catch (error) {
+          console.error(error);
+          res.status(500).send({ error: 'Internal Server Error' });
+        }
+      });
+
+
+
 router.get("/garments", (req, res) => {
 
     db.query("SELECT * FROM garments", (err, result) => {
@@ -106,5 +157,19 @@ router.post("/addOrder", async (req, res) => {
         res.status(500).send({ error: error.message });
       }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;

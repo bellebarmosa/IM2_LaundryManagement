@@ -9,11 +9,11 @@ import Signup from './components/Signup'
 import AdminOrders from './components/pages/AdminOrders'
 import AdminCustomers from './components/pages/AdminCustomers'
 import AdminEmployees from './components/pages/AdminEmployees'
+import AdminServices from './components/pages/AdminServices'
+import AdminDashboard from './components/pages/AdminDashboard'
 
 
 function App() {
-  
-
 
   return (
   <Router>
@@ -21,6 +21,11 @@ function App() {
 
       <Routes>
 
+
+      <Route exact path='/AdminDashboard' Component={AdminDashboard}/>
+        
+      <Route exact path='/AdminServices' Component={AdminServices}/>
+        <Route exact path='/AdminOrders' Component={AdminOrders}/>
         <Route exact path='/admin-employees' Component={AdminEmployees}/>
 
         <Route exact path='/' Component={Login}/>

@@ -1,9 +1,9 @@
 import React from 'react';
-import TotalServicesComponent from '../modules/admin-dashboard/TotalServicesComponent';
-import TotalSalesComponent from '../modules/admin-dashboard/TotalSalesComponent';
-import TotalOrdersComponent from '../modules/admin-dashboard/TotalOrdersComponent';
-import TotalCustomersComponent from '../modules/admin-dashboard/TotalCustomersComponent';
-import RecentOrdersTable from '../modules/admin-dashboard/RecentOrdersTable';
+import TotalServices from '../modules/admin-dashboard/TotalServices';
+import TotalSales from '../modules/admin-dashboard/TotalSales';
+import TotalOrders from '../modules/admin-dashboard/TotalOrders';
+import TotalCustomers from '../modules/admin-dashboard/TotalCustomers';
+import RecentOrdersAdmin from '../modules/admin-dashboard/RecentOrdersAdmin';
 import OrderPopup from '../modules/admin-dashboard/OrderPopup';
 
 const AdminDashboard = () => {
@@ -27,23 +27,23 @@ const AdminDashboard = () => {
       <h1>Admin Dashboard</h1>
 
       <div className="dashboard-section">
-        <TotalServicesComponent />
+        <TotalServices />
       </div>
 
       <div className="dashboard-section">
-        <TotalSalesComponent />
+        <TotalSales />
       </div>
 
       <div className="dashboard-section">
-        <TotalOrdersComponent />
+        <TotalOrders />
       </div>
 
       <div className="dashboard-section">
-        <TotalCustomersComponent />
+        <TotalCustomers />
       </div>
 
       <div className="dashboard-section">
-        <RecentOrdersTable onViewMore={handleViewMore} />
+        <RecentOrdersAdmin onViewMore={handleViewMore} />
       </div>
 
       {selectedOrder && (

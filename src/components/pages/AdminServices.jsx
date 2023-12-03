@@ -1,7 +1,8 @@
+// ServicesPage.jsx
+
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal } from 'antd';
-import 'antd/dist/antd.css';
-import AddServiceModal from './AddServiceModal';
+import { Table, Button } from 'antd';
+import AddServiceModal from '../modules/admin-services/AddServiceModal';
 import axios from 'axios';
 
 const ServicesPage = () => {
@@ -9,24 +10,24 @@ const ServicesPage = () => {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await axios.get('http://your-api-endpoint/services');
-        setServices(response.data);
-      } catch (error) {
-        console.error('Error fetching services:', error);
-      }
-    };
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/order/services');
+      setServices(response.data);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchServices();
-  }, []);
+  }, [fetchServices]);
 
   const columns = [
-    { title: 'Number', dataIndex: 'number', key: 'number' },
-    { title: 'Service Name', dataIndex: 'serviceName', key: 'serviceName' },
-    { title: 'Service Type', dataIndex: 'serviceType', key: 'serviceType' },
-    { title: 'Store Name', dataIndex: 'storeName', key: 'storeName' },
+    { title: 'Number', dataIndex: 'service_ID', key: 'service_ID' },
+    { title: 'Service Name', dataIndex: 'service_name', key: 'service_name' },
+    { title: 'Service Type', dataIndex: 'service_description', key: 'service_description' },
+    { title: 'Service Price', dataIndex: 'service_price', key: 'service_price' },
     { title: 'Status', dataIndex: 'status', key: 'status' },
     {
       title: 'Action',
@@ -41,8 +42,8 @@ const ServicesPage = () => {
   ];
 
   const handleEdit = (record) => {
-    // Implement edit functionality here
-    console.log('Edit Service:', record);
+    setSelectedService(record);
+    setAddModalVisible(true);
   };
 
   const handleDelete = (record) => {
@@ -51,18 +52,41 @@ const ServicesPage = () => {
   };
 
   const handleAddNewService = () => {
+    setSelectedService(null);
     setAddModalVisible(true);
+  };
+
+  const handleAddOrUpdateService = async (values) => {
+    try {
+      if (selectedService) {
+        // If editing, update the service data
+        await axios.put(`http://localhost:3001/order/editService/${selectedService.service_ID}`, values);
+      } else {
+        // If adding, create a new service
+        await axios.post('http://localhost:3001/order/services', values);
+      }
+
+      setAddModalVisible(false);
+      fetchServices(); // Refresh the service list
+    } catch (error) {
+      console.error('Error adding/editing service:', error);
+    }
+  };
+
+  const handleCancel = () => {
+    setAddModalVisible(false);
   };
 
   return (
     <div>
       <Button onClick={handleAddNewService}>Add New Service</Button>
-      <Table dataSource={services} columns={columns} />
+      <Table dataSource={services} columns={columns} rowKey={(record) => record.service_ID} />
 
       <AddServiceModal
         visible={addModalVisible}
-        onCancel={() => setAddModalVisible(false)}
-        // Add any necessary props or callbacks for the AddServiceModal
+        onCancel={handleCancel}
+        onSubmit={handleAddOrUpdateService}
+        selectedService={selectedService}
       />
     </div>
   );
