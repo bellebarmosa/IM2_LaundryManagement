@@ -7,7 +7,8 @@ export default {
         "darkBlue": "#448DB8",
         "lightBlue":'#9ED4E1',
         "brightYellow": '#FFFADD',
-        "fadedYellow": "#FFDFA4"
+        "fadedYellow": "#FFDFA4",
+        "warningRed":"#D4092E"
       },
       fontFamily: {
         'alegreya-sans': ['Alegreya Sans SC', 'sans-serif'],
