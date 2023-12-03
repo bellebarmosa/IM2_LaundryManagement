@@ -8,7 +8,7 @@ const Navbar = () => {
   const email = 'admin@usc.edu.ph'//FRONT END MAKE ME DYNAMIC
 
   return (
-    <div className='flex flex-row h-auto w-full bg-fadedYellow items-center pl-8 p-3'>
+    <div className='flex flex-row h-auto bg-fadedYellow items-center pl-8 p-3'>
       <div className='flex flex-row items-center justify-start w-2/4'>
         <VscMenu size={50} color={"#448DB8"}  />
         <div className="text-darkBlue text-5xl font-black ml-2 pl-3">Dashboard</div>
