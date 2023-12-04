@@ -39,9 +39,9 @@ const AdminSidebarData = [
     link: "/service"
   },
   {
-    title: "Tools",
+    title: "Settings",
     icon: <LiaToolboxSolid size={30} color={"#448DB8"}/>,
-    link: "/tool"
+    link: "/accountSettings"
   }
 ]
 
@@ -82,9 +82,9 @@ const StoreOwnerSidebarData = [
     link: "/services"
   },
   {
-    title: "Tools",
+    title: "Settings",
     icon: <LiaToolboxSolid size={30} color={"#448DB8"}/>,
-    link: "/tools"
+    link: "/accountSettings"
   }
 ]
 
@@ -113,6 +113,11 @@ const StoreEmployeeSidebarData = [
     title: "Services",
     icon: <LiaBoxSolid size={30} color={"#448DB8"}/>,
     link: "/services"
+  },
+  {
+    title: "Settings",
+    icon: <LiaToolboxSolid size={30} color={"#448DB8"}/>,
+    link: "/accountSettings"
   }
 ]
 
@@ -131,6 +136,11 @@ const CustomerSidebarData = [
     title: "Archive",
     icon: <LiaArchiveSolid size={30} color={"#448DB8"}/>,
     link: "/archive"
+  },
+  {
+    title: "Settings",
+    icon: <LiaToolboxSolid size={30} color={"#448DB8"}/>,
+    link: "/accountSettings"
   }
 ]
 

@@ -6,7 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './components/Dashboard';
 
 const App = () => {
-  const userType = 'admin';//BACKEND CHANGE ME
+  const userType = 'storeOwner';//BACKEND CHANGE ME
   /* userType VALUES SHOULD ONLY BE:
     - 'admin'
     - 'storeOwner'
