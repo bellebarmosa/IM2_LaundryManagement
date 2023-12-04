@@ -27,7 +27,7 @@ const App = () => {
       </div>
       <div className="flex flex-col h-full w-11/12 p-5 rounded-t-3xl">
         <Navbar navbarData={ navbarData }/>
-        <Dashboard />
+        <Dashboard userType={ userType }/>
       </div>
       {/* <SignUp/> */}
       {/* <Login/> */}

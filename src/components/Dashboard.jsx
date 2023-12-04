@@ -146,7 +146,7 @@ const DefaultDashboard = () => {
       </div>
 
       <div className="flex flex-row pt-10 gap-5 h-2/3">
-        <div className="flex flex-col w-1/2 bg-screenYellow pl-5 p-3 rounded-2xl ">
+        <div className="flex flex-col w-1/2 bg-screenYellow pl-5 p-5 rounded-2xl ">
           <div className='flex flex-row'>
             <LayoutList size={50} color={"#448DB8"}/>
             <div className="flex flex-col pl-5">
@@ -167,9 +167,9 @@ const DefaultDashboard = () => {
               })}
             </div>
         </div>
-        <div className="flex flex-col w-1/2 bg-screenYellow pl-5 p-3 rounded-2xl ">
+        <div className="flex flex-col w-1/2 bg-screenYellow pl-5 p-5 rounded-2xl ">
           <div className='flex flex-row'>
-            <LayoutList size={50} color={"#448DB8"}/>
+            <ListChecks size={50} color={"#448DB8"}/>
             <div className="flex flex-col pl-5">
               <p className="text-2xl font-semibold text-darkBlue ">Recent Orders</p>
               <p className="text-lg font-medium text-darkBlue pt-0 pb-2">There are { recentOrdersTotal } recent orders.</p>
@@ -193,8 +193,13 @@ const DefaultDashboard = () => {
   )
 }
 
-const Dashboard = () => {
-  var Dashboard = DefaultDashboard;
+const Dashboard = ({ userType }) => {
+  var Dashboard;
+  if(userType !== 'customer'){
+    Dashboard = DefaultDashboard;
+  }else{
+    Dashboard = CustomerDashboard;
+  }
   return (
     <Dashboard/>
   )
