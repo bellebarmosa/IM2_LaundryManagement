@@ -8,7 +8,8 @@ export default {
         "lightBlue":'#9ED4E1',
         "brightYellow": '#FFFADD',
         "fadedYellow": "#FFDFA4",
-        "warningRed":"#D4092E"
+        "warningRed":"#D4092E",
+        "screenYellow":"#E6E9CE"
       },
       fontFamily: {
         'alegreya-sans': ['Alegreya Sans SC', 'sans-serif'],

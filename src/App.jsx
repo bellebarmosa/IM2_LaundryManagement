@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
+import Dashboard from './components/Dashboard';
 
 const App = () => {
   const userType = 'admin';//BACKEND CHANGE ME
@@ -20,16 +21,16 @@ const App = () => {
 
   return (
 
-    <div className='flex flex-row'>
-      {/* <div className='w-fit p-5'>
+    <div className='flex flex-row h-screen'>
+      <div className='w-fit p-5'>
         <Sidebar userType={ userType } />
       </div>
       <div className="flex flex-col h-full w-11/12 p-5 rounded-t-3xl">
         <Navbar navbarData={ navbarData }/>
-        
-      </div> */}
+        <Dashboard />
+      </div>
       {/* <SignUp/> */}
-      <Login/>
+      {/* <Login/> */}
     </div>
   )
 }

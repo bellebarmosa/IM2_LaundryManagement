@@ -5,7 +5,7 @@ import { IoPersonCircle } from "react-icons/io5";
 const Navbar = ({ navbarData }) => {
 
   return (
-    <div className='flex flex-row h-auto bg-brightYellow items-center pl-8 p-3 rounded-t-3xl'>
+    <div className='flex flex-row h-24 bg-brightYellow items-center pl-8 p-3 rounded-t-3xl'>
       <div className='flex flex-row items-center justify-start w-2/4'>
         <div className="text-darkBlue text-5xl font-black select-none">
           {navbarData.length > 0 ? navbarData[0].currentPage : console.error("navbarData error 1: currentPage")}
