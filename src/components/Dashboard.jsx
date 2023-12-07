@@ -8,6 +8,10 @@ const CustomerDashboard = () => {
   )
 }
 
+const CustomIcon = ({ size = 50, color = "#448DB8" }) => {
+  return <CircleUserRound size={size} color={color} />;
+};
+
 const DefaultDashboard = () => {
   const totalSales = 5000;
   const totalOrders = 32;
@@ -17,37 +21,37 @@ const DefaultDashboard = () => {
 
   const PendingOrders = [
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile: <CustomIcon/>,
       name: "Hugh Mongous",
       email: "test1@email.com",
       totalAmount: 5000
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile: <CustomIcon/>,
       name: "Hugh Mongous",
       email: "test1@email.com",
       totalAmount: 5000
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile: <CustomIcon/>,
       name: "Hugh Mongous",
       email: "test1@email.com",
       totalAmount: 5000
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Small Mongous",
       email: "test2@email.com",
       totalAmount: 500
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Medium Mongous",
       email: "test2@email.com",
       totalAmount: 50
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Big Mongous",
       email: "test3@email.com",
       totalAmount: 5
@@ -56,37 +60,37 @@ const DefaultDashboard = () => {
 
   const RecentOrders = [
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Hugh Mongous",
       email: "test1@email.com",
       totalAmount: 5000
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Hugh Mongous",
       email: "test1@email.com",
       totalAmount: 5000
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Hugh Mongous",
       email: "test1@email.com",
       totalAmount: 5000
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Small Mongous",
       email: "test2@email.com",
       totalAmount: 500
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Medium Mongous",
       email: "test2@email.com",
       totalAmount: 50
     },
     {
-      profile: <CircleUserRound size={50} color={"#448DB8"}/>,
+      profile:  <CustomIcon/>,
       name: "Big Mongous",
       email: "test3@email.com",
       totalAmount: 5
