@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar'
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Dashboard from './components/Dashboard';
+import POS from './components/POS';
 
 const App = () => {
   const userType = 'storeOwner';//BACKEND CHANGE ME
@@ -27,7 +28,8 @@ const App = () => {
       </div>
       <div className="flex flex-col h-full w-11/12 p-5 rounded-t-3xl">
         <Navbar navbarData={ navbarData }/>
-        <Dashboard userType={ userType }/>
+        {/* <Dashboard userType={ userType }/> */}
+        <POS/>
       </div>
       {/* <SignUp/> */}
       {/* <Login/> */}
