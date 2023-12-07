@@ -13,7 +13,7 @@ import AdminServices from './components/pages/AdminServices'
 import AdminDashboard from './components/pages/AdminDashboard'
 import RecentOrders from './components/modules/admin-dashboard/RecentOrdersAdmin'
 import OrderDetails from './components/OrderDetails'
-import POS from './components/POS'
+
 
 function App() {
 
@@ -23,7 +23,7 @@ function App() {
 
       <Routes>
 
-      <Route exact path='/POS' Component={POS}/>
+
       <Route exact path='/OrderDetails/:id' Component={OrderDetails}/>
       <Route exact path='/AdminCustomers' Component={AdminCustomers}/>
       <Route exact path='/RecentOrders' Component={RecentOrders}/>
