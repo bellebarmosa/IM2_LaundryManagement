@@ -1,7 +1,6 @@
-// ServicesPage.jsx
 
 import React, { useState, useEffect } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button,Modal  } from 'antd';
 import AddServiceModal from '../modules/admin-services/AddServiceModal';
 import axios from 'axios';
 
@@ -46,11 +45,25 @@ const ServicesPage = () => {
     setAddModalVisible(true);
   };
 
-  const handleDelete = (record) => {
-    // Implement delete functionality here
-    console.log('Delete Service:', record);
+  const handleDelete = async (record) => {
+    try {
+      // Display a confirmation modal before deleting the service
+      Modal.confirm({
+        title: 'Confirm Delete',
+        content: 'Are you sure you want to delete this service?',
+        onOk: async () => {
+          // If the user confirms, proceed with the delete request
+          await axios.delete(`http://localhost:3001/order/deleteService/${record.service_ID}`);
+          fetchServices(); // Refresh the service list after deletion
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+    } catch (error) {
+      console.error('Error deleting service:', error);
+    }
   };
-
   const handleAddNewService = () => {
     setSelectedService(null);
     setAddModalVisible(true);
@@ -59,7 +72,7 @@ const ServicesPage = () => {
   const handleAddOrUpdateService = async (values) => {
     try {
       if (selectedService) {
-        // If editing, update the service data
+        // If editing, update the service
         await axios.put(`http://localhost:3001/order/editService/${selectedService.service_ID}`, values);
       } else {
         // If adding, create a new service

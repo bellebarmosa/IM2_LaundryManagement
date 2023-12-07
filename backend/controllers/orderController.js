@@ -4,7 +4,7 @@ const db = require("../models/db");
 
 const router = express.Router();
 
-router.get("/services", (req, res) => {
+router.get("/services", async(req, res) => {
  
     db.query("SELECT * FROM services", (err, result) => {
         if (err) {
@@ -42,35 +42,79 @@ router.post('/services',async (req,res)=>{
     }
     })
 
-    router.put('/editService/:serviceID', async (req, res) => {
-        try {
-          const { serviceID } = req.params;
-          const { service_name, service_description, service_price } = req.body;
-      
-          const updateServiceQuery =
-            'UPDATE services SET service_name = ?, service_description = ?, service_price = ? WHERE service_ID = ?';
-      
-          db.query(
-            updateServiceQuery,
-            [service_name, service_description, service_price, serviceID],
-            (err, result) => {
-              if (err) {
-                console.error(err);
-                res.status(500).send({ error: 'Internal Server Error' });
-              } else {
-                res.send(result);
-              }
+    router.put('/editservice/:serviceId', async (req, res) => {
+      try {
+        // Extract parameters from the request
+        const { serviceId } = req.params;
+        const updatedService = req.body;
+    
+        // Update the service in the database
+        const updateServiceQuery = `UPDATE services SET service_name = ?,service_description = ?,service_price = ? WHERE service_ID = ?;`;
+    
+        db.query(
+          updateServiceQuery,
+          [
+            updatedService.service_name,
+            updatedService.service_description,
+            updatedService.service_price,
+            serviceId,
+          ],
+          (err, result) => {
+            if (err) {
+              console.error(err);
+              res.status(500).send({ error: 'Internal Server Error' });
+            } else {
+              res.status(200).send({ message: 'Service updated successfully' });
             }
-          );
-        } catch (error) {
-          console.error(error);
-          res.status(500).send({ error: 'Internal Server Error' });
-        }
-      });
+          }
+        );
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Internal Server Error' });
+      }
+    });
 
 
 
-router.get("/garments", (req, res) => {
+
+
+    router.put('/editorder/:orderId', async (req, res) => {
+      try {
+        const { orderId } = req.params;
+        const { updatedData } = req.body;
+    
+        const updateOrderQuery =
+          'UPDATE orders SET order_total = ?, order_paidAmount = ?, order_status = ? WHERE order_ID = ?';
+    
+        db.query(
+          updateOrderQuery,
+          [
+            updatedData.order_total,
+            updatedData.order_paidAmount,
+            updatedData.order_status,
+            orderId,
+          ],
+          (err, result) => {
+            if (err) {
+              console.error(err);
+              res.status(500).send({ error: 'Internal Server Error' });
+            } else {
+              console.log(updatedData)
+              res.send(result);
+              
+
+            }
+          }
+        );
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Internal Server Error' });
+      }
+    });
+
+
+
+router.get("/garments",async (req, res) => {
 
     db.query("SELECT * FROM garments", (err, result) => {
         if (err) {
@@ -85,7 +129,7 @@ router.get("/garments", (req, res) => {
     });
 });
 
-router.get("/customers", (req, res) => {
+router.get("/customers",async(req, res) => {
   
     db.query("SELECT * FROM customers", (err, result) => {
         if (err) {
@@ -99,6 +143,81 @@ router.get("/customers", (req, res) => {
         }
     });
 });
+
+router.post("/customers", async (req, res) => {
+  const insertCustomersQuery =
+    "INSERT INTO `customers`(`customer_name`, `customer_phone`, `customer_eMail`) VALUES (?,?,?)";
+  const newCustomer = {
+    customer_name: req.body.customer_name,
+    customer_phone: req.body.customer_phone,
+    customer_eMail: req.body.customer_eMail,
+  };
+
+  db.query(
+    insertCustomersQuery,
+    [newCustomer.customer_name, newCustomer.customer_phone, newCustomer.customer_eMail],
+    (err, result) => {
+      if (err) {
+        res.send({ err: err });
+      } else {
+        res.send({ message: "Data uploaded successfully" });
+      }
+    }
+  );
+});
+
+router.put('/customers/:customerId', async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const updatedCustomer = req.body;
+
+    const updateCustomerQuery =
+      'UPDATE customers SET customer_name = ?, customer_phone = ?, customer_eMail = ? WHERE customer_ID = ?';
+
+    db.query(
+      updateCustomerQuery,
+      [
+        updatedCustomer.customer_name,
+        updatedCustomer.customer_phone,
+        updatedCustomer.customer_eMail,
+        customerId,
+      ],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send({ error: 'Internal Server Error' });
+        } else {
+          res.status(200).send({ message: 'Customer updated successfully' });
+        }
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+router.delete('/customers/:customerId', async (req, res) => {
+  try {
+    const { customerId } = req.params;
+
+    const deleteCustomerQuery = 'DELETE FROM customers WHERE customer_ID = ?';
+    db.query(deleteCustomerQuery, [customerId], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send({ error: 'Internal Server Error' });
+      } else {
+        res.send({ message: 'Customer deleted successfully' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
 
 router.post("/addOrder", async (req, res) => {
   
@@ -129,7 +248,7 @@ router.post("/addOrder", async (req, res) => {
         for (const orderDetails of newOrder) {
           const insertOrderDetailsQuery =
             "INSERT INTO `orderdetails`(`order_ID`, `quantity`, `order_price`, `service_ID`,`chargePer`) VALUES ?";
-          const bulkOrderDetails = [                                                          //charePer is null in the  datebase fix it later
+          const bulkOrderDetails = [                                                  
             [orderID, orderDetails.qty, orderDetails.amount, orderDetails.service_ID,orderDetails.chargePer],
           ];
     
@@ -158,8 +277,133 @@ router.post("/addOrder", async (req, res) => {
       }
 });
 
+router.get('/totalorders',async (req,res)=>{
+  let query="SELECT COUNT(*) as TotalOrders FROM orders";
 
+  db.query(query,(err,result) => {
+    if (err) {
+        res.send({ err: err });
+    } else {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send({ message: "No ordersfound" });
+        }
+    }
+});
+});
 
+router.get ('/orders', async (req,res)=>{
+  let query = "SELECT * FROM orders"
+
+  db.query(query,(err,result) => {
+    if (err) {
+        res.send({ err: err });
+    } else {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send({ message: "No orders found" });
+        }
+    }
+});
+});
+
+// router.put('/editorder/:orderId', async (req, res) => {
+//   try {
+//     const { orderId } = req.params;
+//     const { updatedData } = req.body;
+
+//     const updateOrderQuery =
+//       'UPDATE orders SET  order_total = ?, order_paidAmount = ?, order_status = ? WHERE order_ID = ?';
+
+//     db.query(
+//       updateOrderQuery,
+//       [
+//         updatedData.orderInfo,
+//         updatedData.order_total,
+//         updatedData.order_paidAmount,
+//         updatedData.storeName,
+//         updatedData.order_status,
+//         orderId,
+//       ],
+//       (err, result) => {
+//         if (err) {
+//           console.error(err);
+//           res.status(500).send({ error: 'Internal Server Error' });
+//         } else {
+//           res.send(result);
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ error: 'Internal Server Error' });
+//   }
+// });
+
+router.delete('/deleteService/:serviceId', async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+
+    // Perform the deletion in your database
+    const deleteServiceQuery = 'DELETE FROM services WHERE service_ID = ?';
+
+    db.query(deleteServiceQuery, [serviceId], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send({ error: 'Internal Server Error' });
+      } else {
+        res.send({ message: 'Service deleted successfully' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+// const db = require('../path/to/your/db-module');
+
+// // Define the route for updating an order
+// router.put('/order/editorder/:orderId', async (req, res) => {
+//   try {
+//     const { orderId } = req.params;
+//     const updatedData = req.body;
+
+//     // Update the order in the database
+//     const updateOrderQuery = `
+//       UPDATE orders
+//       SET order_total = ?,
+//           order_status = ?,
+//           order_paidAmount = ?,
+//           storeName = ?
+//       WHERE order_ID = ?;
+//     `;
+
+//     db.query(
+//       updateOrderQuery,
+//       [
+//         updatedData.order_total,
+//         updatedData.order_status,
+//         updatedData.order_paidAmount,
+//         updatedData.storeName,
+//         orderId,
+//       ],
+//       (err, result) => {
+//         if (err) {
+//           console.error(err);
+//           res.status(500).send({ error: 'Internal Server Error' });
+//         } else {
+//           res.status(200).send({ message: 'Order updated successfully' });
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ error: 'Internal Server Error' });
+//   }
+// });
 
 
 

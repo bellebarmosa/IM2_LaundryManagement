@@ -34,7 +34,7 @@ const OrderPopup = ({ order, onEdit, onClose }) => {
           <input
             type="text"
             name="customer"
-            value={editedOrder.customer}
+            value={editedOrder.customer_name}
             onChange={handleChange}
           />
         </label>
@@ -43,7 +43,7 @@ const OrderPopup = ({ order, onEdit, onClose }) => {
           <input
             type="number"
             name="orderAmount"
-            value={editedOrder.orderAmount}
+            value={editedOrder.order_total}
             onChange={handleChange}
           />
         </label>
@@ -52,7 +52,7 @@ const OrderPopup = ({ order, onEdit, onClose }) => {
           <input
             type="number"
             name="paymentAmount"
-            value={editedOrder.paymentAmount}
+            value={editedOrder.order_paidAmount}
             onChange={handleChange}
           />
         </label>

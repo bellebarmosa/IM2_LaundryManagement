@@ -30,21 +30,23 @@ const AdminDashboard = () => {
         <TotalServices />
       </div>
 
-      <div className="dashboard-section">
+     <div className="dashboard-section">
         <TotalSales />
       </div>
 
+ 
       <div className="dashboard-section">
         <TotalOrders />
       </div>
-
+ 
       <div className="dashboard-section">
         <TotalCustomers />
       </div>
 
-      <div className="dashboard-section">
+      {/* 
+       <div className="dashboard-section">
         <RecentOrdersAdmin onViewMore={handleViewMore} />
-      </div>
+      </div> 
 
       {selectedOrder && (
         <OrderPopup
@@ -54,7 +56,8 @@ const AdminDashboard = () => {
           }
           onClose={handleClosePopup}
         />
-      )}
+      )} */}
+      
     </div>
   );
 };

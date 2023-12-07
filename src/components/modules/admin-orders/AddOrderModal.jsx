@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input, Button } from 'antd';
 
-const AddOrderModal = ({ visible, onCancel }) => {
+const AddOrderModal = ({ visible, onCancel, order }) => {
   const onFinish = (values) => {
     // add new order
     console.log('Form values:', values);

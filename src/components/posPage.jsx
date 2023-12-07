@@ -6,11 +6,11 @@ import React from 'react';
 import PopUPgarment from './PopUPgarment';
 import PopUPservice from './PopUPservice'
 
+
 //TO DO
 //REDO USER AUTH DO JWT
-//SEARCH
-//ON PAYMENT CALCULATE FOR TAX??
-//BUG WITH EDIT AND TOTAL
+// I didnt do the ADD ORDER in AdminOrders kay it should just be in the pos page
+//
 
 
 
@@ -38,7 +38,7 @@ const PosPage = () => {
 
     const [isToggleOn, setToggleOn] = useState(false);
 
- 
+    //CHANGE THE VIEW IN LINK TO WHERE IT TAKE YOU TO ORDERDETAILS
 
     Axios.defaults.withCredentials = true;
 
@@ -52,9 +52,7 @@ const PosPage = () => {
         }else{
           navigate("/");
         }
-  
       });
-  
     },[])
 
     useEffect(()=>{ //retrieve services
@@ -297,7 +295,7 @@ const PosPage = () => {
 
           <div className="wrapper">
 
-      {isToggleOn ?    <div className="clothes-container">
+      {isToggleOn ?  <div className="clothes-container">
           {garments && garments.map((garmentsItem) => (
             <div className="clothes" key={garmentsItem.garment_ID} onClick={()=>onClothesClick(garmentsItem)} > 
               <h2>{garmentsItem.garment_name}</h2>
@@ -318,7 +316,7 @@ const PosPage = () => {
 
 
 
-            <PopUPgarment
+          <PopUPgarment
                 trigger={open}
                 setOpen={setOpen}
                 addGarment={addGarment}

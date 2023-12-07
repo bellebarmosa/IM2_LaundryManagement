@@ -9,5 +9,7 @@ router.get("/login", userController);
 router.post("/login", userController);
 router.get("/employees",userController);
 router.put('/edit/:employeeID',userController);
+router.get('/totalsales',userController)
+router.delete('/delete/:employeeId',userController);
 
 module.exports = router;

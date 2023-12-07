@@ -13,21 +13,26 @@ const AdminCustomers = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get('');
-        setCustomers(response.data);
+       await axios.get('http://localhost:3001/order/customers')
+        .then((response)=>{
+          setCustomers(response.data);
+          console.log(customers)
+        })
       } catch (error) {
         console.error('Error:', error);
       }
     };
-
+   
     fetchCustomers();
   }, []);
 
+
+
   const columns = [
-    { title: 'Number', dataIndex: 'number', key: 'number', sorter: (a, b) => a.number - b.number },
-    { title: 'Customer Name', dataIndex: 'customerName', key: 'customerName', sorter: (a, b) => a.customerName.localeCompare(b.customerName) },
-    { title: 'Contact Details', dataIndex: 'contactDetails', key: 'contactDetails' },
-    { title: 'Address', dataIndex: 'address', key: 'address' },
+    { title: 'Number', dataIndex: 'customer_ID', key: 'customer_ID', sorter: (a, b) => a.number - b.number },
+    { title: 'Customer Name', dataIndex: 'customer_name', key: 'customer_name', sorter: (a, b) => a.customerName.localeCompare(b.customerName) },
+    { title: 'Contact Details', dataIndex: 'customer_phone', key: 'customer_phone' },
+    { title: 'Address', dataIndex: 'customer_eMail', key: 'customer_eMail' },
     { title: 'Store Name', dataIndex: 'storeName', key: 'storeName', sorter: (a, b) => a.storeName.localeCompare(b.storeName) },
     { title: 'Status', dataIndex: 'status', key: 'status', filters: [
       { text: 'Active', value: 'active' },
@@ -45,14 +50,32 @@ const AdminCustomers = () => {
     },
   ];
 
-  const handleEdit = (record) => {
-    // Implement edit functionality here
-    console.log('Edit Customer:', record);
+  const handleEdit = async (record) => {
+    try {
+      console.log(record)
+      // Fetch the customer data based on the customer ID
+       
+      const editedCustomer = record
+  
+      // Open the modal for editing with the fetched customer data
+      form.setFieldsValue(editedCustomer);
+      setAddModalVisible(true);
+    } catch (error) {
+      console.error('Error fetching customer for edit:', error);
+    }
   };
 
-  const handleDelete = (record) => {
-    // Implement delete functionality here
-    console.log('Delete Customer:', record);
+  const handleDelete = async (record) => {
+    try {
+      // Send a request to the server to delete the customer
+      await axios.delete(`http://localhost:3001/order/customers/${record.customer_ID}`);
+      const response = await axios.get('http://localhost:3001/order/customers');
+      setCustomers(response.data);
+      // Filter out the deleted customer from the state
+      // setCustomers(customers.filter((customer) => customer.customer_ID !== record.customer_ID));
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+    }
   };
 
   const handleAddNewCustomer = () => {
@@ -60,14 +83,24 @@ const AdminCustomers = () => {
     setAddModalVisible(true);
   };
 
-  const handleAddCustomer = async (values) => {
+  const handleAddCustomer = async (values) => { console.log(values)
     try {
-      // Implement logic to add a new customer to the SQL database
-      const response = await axios.post('', values);
-      setCustomers([...customers, response.data]); // Update the table with the new data
-      setAddModalVisible(false); // Close the modal
+      if (values.customer_ID) {
+        // If customer_ID is present
+        await axios.put(`http://localhost:3001/order/customers/${values.customer_ID}`, values);
+      } else {
+        // If no customer_ID
+        await axios.post('http://localhost:3001/order/customers', values);
+      }
+  
+      // Fetch the updated data after addition/editing
+      const response = await axios.get('http://localhost:3001/order/customers');
+      setCustomers(response.data);
+  
+      // Close the modal
+      setAddModalVisible(false);
     } catch (error) {
-      console.error('Error adding customer:', error);
+      console.error('Error adding/updating customer:', error);
     }
   };
 
@@ -86,19 +119,23 @@ const AdminCustomers = () => {
         footer={null}
       >
         <Form form={form} onFinish={handleAddCustomer}>
-          <Form.Item label="Customer Name" name="customerName" rules={[{ required: true }]}>
+          
+        <Form.Item label="Customer ID" name="customer_ID">
+          <Input readOnly />
+           </Form.Item>
+          <Form.Item label="Customer Name" name="customer_name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Contact Details"
-            name="contactDetails"
+            name="customer_phone"
             rules={[{ required: true }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item label="Address" name="address" rules={[{ required: true }]}>
+          <Form.Item label="Address" name="customer_eMail" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
 

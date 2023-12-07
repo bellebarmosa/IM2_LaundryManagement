@@ -23,7 +23,7 @@ const AdminEmployees = () => {
       }
     };
     fetchEmployees();
-  }, []);
+  }, [employees]);
 
   const columns = [
     { title: 'Number', dataIndex: 'employee_ID', key: 'employee_ID', sorter: (a, b) => a.number - b.number },
@@ -62,8 +62,23 @@ const AdminEmployees = () => {
   };
 
   const handleDelete = (record) => {
-    // delete
-    console.log('Delete Employee:', record);
+    try {
+      // Display a confirmation modal before deleting the employee
+      Modal.confirm({
+        title: 'Confirm Delete',
+        content: 'Are you sure you want to delete this employee?',
+        onOk: async () => {
+          // If the user confirms, proceed with the delete request
+          await axios.delete(`http://localhost:3001/user/delete/${record.employee_ID}`);
+          setEmployees(employees.filter((e) => e.employee_ID !== record.employee_ID)); // Update the state after deletion
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+    }
   };
 
   const handleAddNewEmployee = () => {
@@ -74,6 +89,7 @@ const AdminEmployees = () => {
 
   const handleAddEmployee = async (values) => {
     try {
+      console.log(values)
       if (editRecord) {
         // If editing, update the employee data
         await axios.put(`http://localhost:3001/user/edit/${editRecord.employee_ID}`, values);
@@ -83,9 +99,11 @@ const AdminEmployees = () => {
         const response = await axios.post('http://localhost:3001/user/register', values);
         setEmployees([...employees, response.data]);
       }
+      console.log(values)
 
       form.resetFields(); // Reset the form fields
       setAddModalVisible(false); 
+     
     } catch (error) {
       console.error('Error adding/editing employee:', error);
     }

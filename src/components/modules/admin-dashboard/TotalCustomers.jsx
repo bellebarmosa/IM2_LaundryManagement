@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import Axios from 'axios'
 
 const TotalCustomersComponent = () => {
-  const [totalCustomers, setTotalCustomers] = useState(0);
+  const [totalCustomers, setTotalCustomers] = useState([]);
 
-  useEffect(() => {
-    // Fetch total orders from the backend
-    fetch('http://localhost:3001/customers')
-      .then((response) => response.json())
-      .then((data) => setTotalCustomers(data.totalCustomers))
-      .catch((error) => console.error('Error:', error));
-  }, []);
+  useEffect(()=>{ //retrieves total customers 
+    Axios.get("http://localhost:3001/order/customers")
+    .then((response)=>{
+      if(response.err){
+        console.log(response.err)
+      }else{
+        setTotalCustomers(response.data);
+        console.log(response.data)
+      }
+    })
+  },[])
 
   return (
     <div>
       <h1>Total Customers</h1>
-      <p>{totalCustomers}</p>
+      <p>{totalCustomers.length}</p>
     </div>
   );
 };

@@ -31,8 +31,18 @@ router.get('/employees', async (req,res)=>{
 router.put('/edit/:employeeID', async (req, res) => {
     try {
       const employeeID = req.params.employeeID;
-      const updatedEmployee = req.body;
-  
+
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.employee_password, salt);
+
+      const updatedEmployee = {
+        employee_name: req.body.employee_name,
+        employee_eMail: req.body.employee_eMail,
+        employee_phone: req.body.employee_phone,
+        employee_role: req.body.employee_role,
+        employee_password: hashedPassword,
+      };
+    
       //Update where employee_ID matches
       const updateEmployeeQuery = `
         UPDATE employees
@@ -70,48 +80,60 @@ router.put('/edit/:employeeID', async (req, res) => {
     }
   });
 
-router.post('/register', async (req, res) => {
-  
+  router.post('/register', async (req, res) => {
     try {
-     
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.employee_password, salt);
+  
+      const user = {
+        employee_name: req.body.employee_name,
+        employee_eMail: req.body.employee_eMail,
+        employee_phone: req.body.employee_phone,
+        employee_role: req.body.employee_role,
+        employee_password: hashedPassword,
+      };
 
-        const user = {
-            employee_name: req.body.name,
-            employee_eMail: req.body.email,
-            employee_phone: req.body.phone,
-            employee_role: req.body.role,
-            employee_password: hashedPassword
-        }
-       
-
-        const insertIntoEmployee =
-        "INSERT INTO `employees`(`employee_name`, `employee_phone`, `employee_eMail`, `employee_role`, `employee_password`) VALUES (?, ?, ?, ?, ?)";
-
-        db.query(insertIntoEmployee,
-            [
-                user.employee_name,
-                user.employee_phone,
-                user.employee_eMail,
-                user.employee_role,
-                user.employee_password
-            ],
-            (err, result) => {
-                if (err) {
-                    console.error(err);  // Log the error for debugging
-                    res.status(500).send({ error: 'Internal Server Error' });
-                } else {
-                    res.send(result);
-                }
-            })
-    } catch {
-       
-        res.status(500).send({ error: "ERR"});
-        
+      console.log(user)
+  
+      const insertIntoEmployee =
+        "INSERT INTO employees(`employee_name`, `employee_phone`, `employee_eMail`, `employee_role`, `employee_password`) VALUES (?, ?, ?, ?, ?)";
+  
+      const result = await db.queryAsync(insertIntoEmployee, [
+        user.employee_name,
+        user.employee_phone,
+        user.employee_eMail,
+        user.employee_role,
+        user.employee_password,
+      ]);
+  
+      console.log('Database result:', result);
+      res.send(result);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send({ error: 'Internal Server Error' });
     }
-})
-
+  });
+  
+  router.delete('/delete/:employeeId', async (req, res) => {
+    try {
+      const { employeeId } = req.params;
+  
+      // Perform the delete operation in the database
+      const deleteEmployeeQuery = 'DELETE FROM employees WHERE employee_ID = ?';
+  
+      const result = await db.queryAsync(deleteEmployeeQuery, [employeeId]);
+  
+      if (result.affectedRows === 0) {
+        // If no rows were affected, the employee with the given ID was not found
+        res.status(404).send({ error: 'Employee not found' });
+      } else {
+        res.status(200).send({ message: 'Employee deleted successfully' });
+      }
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
+  });
 
 router.get("/login", (req, res) => {
     
@@ -156,5 +178,19 @@ router.post("/login", async (req, res) => {
         }
     );
 });
+
+
+router.get('/totalsales', async (req,res)=>{
+
+    db.query("SELECT SUM(order_total) AS totalsales FROM `orders` " ,(err,result)=>{
+        if (err) {
+            res.send({ err: err });
+        }else{
+            res.send(result);
+        }
+    })
+})
+
+router.get('/customers')
 
 module.exports = router;
