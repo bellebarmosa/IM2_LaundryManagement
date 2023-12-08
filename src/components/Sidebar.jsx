@@ -1,4 +1,6 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
+
 import Logo from '../assets/iWashify.png'
 import { LiaHomeSolid, LiaCalculatorSolid, LiaUsersCogSolid, LiaUserTieSolid , LiaArchiveSolid, LiaUsersSolid, LiaChartBarSolid, LiaBoxSolid , LiaToolboxSolid, LiaSignOutAltSolid   } from "react-icons/lia";
 
@@ -138,36 +140,31 @@ const Sidebar = ({ userType }) => {
 
   return (
     <div className='flex flex-col items-center w-fit'>
-
-      <img src={Logo} className='w-28 rounded-3xl select-none'/>
-      <p className='font-semibold text-darkBlue text-5xl font-alegreya-sans select-none'>iWashify</p>
-      <p className='text-xs text-black select-none font-bold tracking-widest'>POINT OF SALE SYSTEM</p>
-
+      {/* ... (your existing Sidebar code) */}
       <div className='flex flex-col items-start pt-4 gap-2'>
-
-        {SidebarData.map(( val, key ) => { //This renders all the possible sidebar navigational items for each user type
-          return  <div 
-                    key={ key } 
-                    onClick={ ()=>{ window.location.pathname = val.link } } 
-                    //Change onclick() so that when the div of the item is clicked, it changes the body and the navbar
-                    className='flex flex-row items-center select-none h-fit w-full rounded-full py-2 px-6 hover:bg-brightYellow '
-                  >{" "}
-              { val.icon }
-              <p className='text-darkBlue text-2xl pl-3 font-semibold'>{ val.title }</p>
-            </div>
-          })
-        }
-
-          <div  
-            className='flex flex-row items-center select-none h-fit w-full rounded-full py-2 px-6 hover:bg-brightYellow ' 
-            //onClick={()=>{window.location.pathname = val.link}} CHANGE THIS TO MAKE LOGOUT FUNCTIONAL 
+        {SidebarData.map((val, key) => (
+          <NavLink
+            key={key}
+            to={val.link}
+            className='flex flex-row items-center select-none h-fit w-full rounded-full py-2 px-6 hover:bg-brightYellow '
+            activeClassName='active-link'
           >
-            <LiaSignOutAltSolid  size={30} color={"#D4092E"} style={{ strokeWidth: 0.8 }}/>
-            <p className='text-warningRed font-bold text-2xl pl-3'>Logout</p>
-          </div>
+            {val.icon}
+            <p className='text-darkBlue text-2xl pl-3 font-semibold'>{val.title}</p>
+          </NavLink>
+        ))}
+        {/* Logout link using NavLink */}
+        <NavLink
+          to='/logout'
+          className='flex flex-row items-center select-none h-fit w-full rounded-full py-2 px-6 hover:bg-brightYellow '
+          // onClick={()=>{window.location.pathname = val.link}} CHANGE THIS TO MAKE LOGOUT FUNCTIONAL
+        >
+          <LiaSignOutAltSolid size={30} color={"#D4092E"} style={{ strokeWidth: 0.8 }} />
+          <p className='text-warningRed font-bold text-2xl pl-3'>Logout</p>
+        </NavLink>
       </div>
     </div>
-  )
+  );
 }
 
 export default Sidebar;

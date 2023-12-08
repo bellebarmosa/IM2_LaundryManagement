@@ -1,39 +1,53 @@
-import React from 'react'
+import React, { useState } from 'react'
+
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
-import Dashboard from './components/Dashboard';
-import POS from './components/POS';
+import Dashboard from './components/pages/Dashboard';
+import POS from './components/pages/POS';
+import { AdminLayout } from './components/layouts/AdminLayout';
+import AppRouter from './components/AppRouter'
+
 
 const App = () => {
-  const userType = 'storeOwner';//BACKEND CHANGE ME
+  const [userType, setUserType] = useState('admin');
+  const [loggedIn, setLoggedIn] = useState(true);
+  // const userType = 'storeOwner';//BACKEND CHANGE ME
   /* userType VALUES SHOULD ONLY BE:
     - 'admin'
     - 'storeOwner'
     - 'storeEmployee'
     - 'customer'
   */
+  const handleLogin = (userType) => {
+    setUserType(userType);
+  };
   const navbarData = [{ 
     currentPage: 'Dashboard', 
     name: 'Admin', 
     email: 'admin@usc.edu.ph'   
   }]//BACKEND CHANGE ME
 
-  return (
+  const renderLayout = () => {
+    switch (userType) {
+      case 'admin':
+        return <AdminLayout userType={userType} navbarData={navbarData}/>;
+      case 'customer':
+        return <CustomerLayout />;
+      case 'storeOwner':
+        return <StoreOwnerLayout />;
+      case 'storeEmployee':
+        return <StoreEmployeeLayout />;
+      default:
+        return null;
+    }
+  };
 
-    <div className='flex flex-row h-screen'>
-      <div className='w-fit p-5'>
-        <Sidebar userType={ userType } />
-      </div>
-      <div className="flex flex-col h-full w-11/12 p-5 rounded-t-3xl">
-        <Navbar navbarData={ navbarData }/>
-        {/* <Dashboard userType={ userType }/> */}
-        <POS/>
-      </div>
-      {/* <SignUp/> */}
-      {/* <Login/> */}
-    </div>
+  return (
+    <>
+      {renderLayout()}
+    </>
   )
 }
 

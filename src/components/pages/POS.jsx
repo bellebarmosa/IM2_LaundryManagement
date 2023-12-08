@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-import ServiceModal from './modals/ServiceModal'
+import ServiceModal from '../modals/ServiceModal'
 
-import svgWhites from '../assets/whites.png'
-import svgColored from '../assets/colored.png'
-import svgDelicates from '../assets/delicates.png'
-import svgDenim from '../assets/denim.png'
-import svgAthleticWear from '../assets/athletic.png'
-import svgOutwear from '../assets/outerwear.png'
-import svgBedLinens from '../assets/bedding.png'
-import svgTowels from '../assets/towels.png'
-import svgCurtains from '../assets/curtains.png'
-import svgRags from '../assets/rags.png'
-import svgSuits from '../assets/suits.png'
+import svgWhites from '../../assets/whites.png'
+import svgColored from '../../assets/colored.png'
+import svgDelicates from '../../assets/delicates.png'
+import svgDenim from '../../assets/denim.png'
+import svgAthleticWear from '../../assets/athletic.png'
+import svgOutwear from '../../assets/outerwear.png'
+import svgBedLinens from '../../assets/bedding.png'
+import svgTowels from '../../assets/towels.png'
+import svgCurtains from '../../assets/curtains.png'
+import svgRags from '../../assets/rags.png'
+import svgSuits from '../../assets/suits.png'
 
 
 const Icon = ({svgName}) => {
