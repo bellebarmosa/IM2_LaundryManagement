@@ -223,7 +223,7 @@ const Services = () => {
         >
           Add New Service
         </StyledButton>
-        <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5 h-full">
+        <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5 h-full overflow-auto">
           <DataGrid
             rows={services}
             columns={columns}
@@ -231,6 +231,7 @@ const Services = () => {
             components={{
               Toolbar: GridToolbar,
             }}
+            style={{ maxHeight: '450px' }}
           />
         </div>
         {addModalVisible && (
