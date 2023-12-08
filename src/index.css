@@ -1,3 +1,37 @@
+<<<<<<< Updated upstream
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+=======
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@800&family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  font-family: 'Montserrat', sans-serif;
+  background-color: #FFDFA4;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #4a5568 #cbd5e0;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 5px; /* Adjust the value to change the radius */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #448DB8;
+  border-radius: 5px; /* Adjust the value to change the radius */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #FFDFA4;
+  border-radius: 5px; /* Adjust the value to change the radius */
+}
+>>>>>>> Stashed changes
