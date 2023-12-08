@@ -175,41 +175,6 @@ useEffect(()=>{
   })
 },[])
 
-const getIconByName = (clotheType) => {
-  switch (clotheType) {
-    case 'Whites':
-      return svgWhites;
-    case 'Colored':
-      return svgColored;
-    case 'Delicates':
-      return svgDelicates;
-    case 'Denim':
-      return svgDenim;
-    case 'Athletic':
-      return svgAthleticWear;
-    case 'Outwear':
-      return svgOutwear;
-    case 'Linens':
-      return svgBedLinens;
-    case 'Towels':
-      return svgTowels;
-    case 'Curtains':
-      return svgCurtains;
-    case 'Rags':
-      return svgRags;
-    case 'Suits':
-      return svgSuits;
-    default:
-      return null; // You can provide a default icon or handle missing icons
-  }
-};
-
-const clothesWithTypeAndIcon = ClothesType.map((item) => ({
-  ...item,
-  icon: getIconByName(item.name)
-}));
-
-
 
   const addLaundryItems = (items) => {
     setLaundryItems([...laundryItems, items]);
@@ -263,12 +228,11 @@ const clothesWithTypeAndIcon = ClothesType.map((item) => ({
   const clearList = () => {
     setLaundryItems([]);
   };
-
   
 
 
   const renderClothesTypeRows = () => {
-    return clothesWithTypeAndIcon.map((item) => (
+    return ClothesType.map((item) => (
       <div key={item.clotheType} className="rounded-2xl w-1/5 h-full bg-darkBlue hover:bg-lightBlue select-none flex flex-col items-center p-4">
         <div className="pt-1" onClick={() => handleOptionClick(item.clotheType)}>
           <Icon svgName={getIconByName(item.clotheType)} />
@@ -300,22 +264,22 @@ const clothesWithTypeAndIcon = ClothesType.map((item) => ({
             </tr>
           </thead>
           <tbody>
-          {laundryItems.map((item) => (
- <tr key={item.id} className="flex flex-row pt-5">
-   <td className="text-xl font-semibold w-1/6">{item.type}</td>
-   <td className="text-xl font-semibold w-2/6 pr-2 text-right">{item.service}</td>
-   <td className="text-xl font-semibold w-1/6 text-center">{item.quantity}</td>
-   <td className="text-xl font-semibold w-1/6 text-right">₱{item.total}</td> 
-   <td className='pl-4'>
-     <button
-       className='text-lg bg-red-700 text-brightYellow font-semibold h-fit w-fit rounded-2xl px-2'
-       onClick={() => handleDelete(item.id)}
-     >
-       Delete
-     </button>
-   </td>
- </tr>
-))}
+            {laundryItems.map((item, index) => (
+              <tr key={index} className="flex flex-row pt-5">
+                <td className="text-xl font-semibold w-1/6">{item.type}</td>
+                <td className="text-xl font-semibold w-2/6 pr-2 text-right">{item.service}</td>
+                <td className="text-xl font-semibold w-1/6 text-center">{item.quantity}</td>
+                <td className="text-xl font-semibold w-1/6 text-right">₱{item.total}</td> 
+                <td className='pl-4'>
+                  <button
+                    className='text-lg bg-red-700  text-brightYellow font-semibold h-fit w-fit rounded-2xl px-2'
+                    onClick={() => handleDelete(index)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         </div>
