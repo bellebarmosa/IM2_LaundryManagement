@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -77,108 +79,93 @@ const Employees = () => {
     });
   };
 
+  const columns = [
+    { field: 'employee_ID', headerName: 'Number', flex: 1 },
+    { field: 'employee_name', headerName: 'Employee Name', flex: 1 },
+    { field: 'employee_phone', headerName: 'Contact Details', flex: 1 },
+    { field: 'employee_eMail', headerName: 'eMail', flex: 1 },
+    { field: 'employee_role', headerName: 'Role', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Action',
+      flex: 1,
+      renderCell: (params) => (
+        <>
+          <Button onClick={() => handleEdit(params.row)}>Edit</Button>
+          <Button onClick={() => handleDelete(params.row)}>Delete</Button>
+        </>
+      ),
+    },
+  ];
+
   return (
     <>
-    <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
-    <button onClick={handleAddNewEmployee} className="mb-2 bg-darkBlue hover:bg-lightBlue text-white font-bold py-1 px-2 rounded">
-        Add New Employee
-      </button>
-      <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5">
-      <table className="w-full table-fixed border-collapse">
-        <thead>
-          <tr>
-            <th className="w-1/8 text-darkBlue">Number</th>
-            <th className="w-1/8 text-darkBlue">Employee Name</th>
-            <th className="w-1/8 text-darkBlue">Contact Details</th>
-            <th className="w-1/8 text-darkBlue">eMail</th>
-            <th className="w-1/8 text-darkBlue">Role</th>
-            <th className="w-1/8 text-darkBlue">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((record) => (
-            <tr key={record.employee_ID}>
-              <td>{record.employee_ID}</td>
-              <td>{record.employee_name}</td>
-              <td>{record.employee_phone}</td>
-              <td>{record.employee_eMail}</td>
-              <td>{record.employee_role}</td>
-              <td>
-                <button onClick={() => handleEdit(record)} className="mr-2 bg-darkBlue hover:bg-lightBlue text-white font-bold py-1 px-2 rounded">
-                  Edit
-                </button>
-                <button onClick={() => handleDelete(record)} className="bg-darkBlue hover:bg-lightBlue text-white font-bold py-1 px-2 rounded">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {addModalVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-        <div className="bg-brightYellow p-5 rounded">
-          <div className="mb-2">
-            <label className="block text-darkBlue">Employee Name:</label>
-            <input
-              type="text"
-              name="employee_name"
-              value={formValues.employee_name || ''}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div className="mb-2">
-            <label className="block text-darkBlue">Phone Number:</label>
-            <input
-              type="text"
-              name="employee_phone"
-              value={formValues.employee_phone || ''}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div className="mb-2">
-            <label className="block text-darkBlue">Email Address:</label>
-            <input
-              type="text"
-              name="employee_eMail"
-              value={formValues.employee_eMail || ''}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div className="mb-2">
-            <label className="block text-darkBlue">Role:</label>
-            <input
-              type="text"
-              name="employee_role"
-              value={formValues.employee_role || ''}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div className="flex justify-end mt-4">
-            <button
-              onClick={handleAddEmployee}
-              className="bg-darkBlue hover:bg-lightBlue text-white font-bold py-2 px-4 rounded"
-            >
-              {editRecord ? 'Update Employee' : 'Add Employee'}
-            </button>
-            <button
-              onClick={handleCancel}
-              className="ml-2 bg-darkBlue hover:bg-lightBlue text-white font-bold py-2 px-4 rounded"
-            >
-              Cancel
-            </button>
-          </div>
+      <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
+      <Button // ngano mani huhu di ma tarong ang styling
+          onClick={handleAddNewEmployee}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
+          Add New Employee
+        </Button>
+        <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5 h-full">
+          <DataGrid
+            rows={employees}
+            columns={columns}
+            pageSize={6}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
         </div>
+        {addModalVisible && (
+          <Dialog open={addModalVisible} onClose={handleCancel}>
+            <DialogTitle>{editRecord ? 'Edit Employee' : 'Add New Employee'}</DialogTitle>
+            <DialogContent>
+              <TextField
+                label="Employee Name"
+                name="employee_name"
+                value={formValues.employee_name || ''}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Phone Number"
+                name="employee_phone"
+                value={formValues.employee_phone || ''}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Email Address"
+                name="employee_eMail"
+                value={formValues.employee_eMail || ''}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Role"
+                name="employee_role"
+                value={formValues.employee_role || ''}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleAddEmployee} color="primary" variant="contained">
+                {editRecord ? 'Update Employee' : 'Add Employee'}
+              </Button>
+              <Button onClick={handleCancel} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </div>
-      
-      )}
-    </div>
-    </div>
     </>
-)};
+  );
+};
 
-export default Employees
+export default Employees;
