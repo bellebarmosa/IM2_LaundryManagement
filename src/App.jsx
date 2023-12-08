@@ -10,6 +10,7 @@ import Services from './pages/Services';
 import Settings from './pages/settings/Settings';
 import Orders from './pages/Orders';
 import Analytics from './pages/Analytics';
+import Clothes from './pages/Clothes';
 
 const App = () => {
   const userType = 'admin';//BACKEND CHANGE ME
@@ -39,7 +40,8 @@ const App = () => {
         {/* <Analytics/> */}
         {/* <Employees/> */}
         {/* <Orders/> */}
-        <Analytics/>
+        {/* <Analytics/> */}
+        <Clothes/>
     </div>
       {/* <SignUp/>
       <Login/> */}
