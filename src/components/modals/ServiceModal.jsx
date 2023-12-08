@@ -61,7 +61,7 @@ export default function ServiceModal({ laundryType, closeModal, addLaundryItem, 
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-1000" onClick={handleCancel}></div>
+      <div className="fixed inset-0 bg-black bg-opacity-10 z-1000" onClick={handleCancel}></div>
       <div className="fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] h-1/3 w-1/3 z-1000 bg-screenYellow p-4 rounded-xl">
         <div className="flex flex-col p-5">
           <div className="flex flex-row items-center gap-5 pb-4">
