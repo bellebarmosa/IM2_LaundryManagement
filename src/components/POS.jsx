@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react';
 
 import ServiceModal from './modals/ServiceModal'
 
-import svgWhites from '../assets/white.svg'
-import svgColored from '../assets/colored.svg'
-import svgDelicates from '../assets/delicates.svg'
-import svgDenim from '../assets/denim.svg'
-import svgAthleticWear from '../assets/athletic gear.svg'
-import svgOutwear from '../assets/outerwear.svg'
-import svgBedLinens from '../assets/bedding.svg'
-import svgTowels from '../assets/towel.svg'
+import svgWhites from '../assets/whites.png'
+import svgColored from '../assets/colored.png'
+import svgDelicates from '../assets/delicates.png'
+import svgDenim from '../assets/denim.png'
+import svgAthleticWear from '../assets/athletic.png'
+import svgOutwear from '../assets/outerwear.png'
+import svgBedLinens from '../assets/bedding.png'
+import svgTowels from '../assets/towels.png'
+import svgCurtains from '../assets/curtains.png'
+import svgRags from '../assets/rags.png'
+import svgSuits from '../assets/suits.png'
 
 
 const Icon = ({svgName}) => {
   return (
-    <img src={svgName} alt='Whites' style={{ width: '150px', height: '150px', borderRadius: '1rem', padding: '.5rem' }}/>
+    <img src={svgName} alt='Whites' style={{ width: '150px', height: '150px', borderRadius: '1rem'}}/>
   )
 }
 
@@ -54,15 +57,15 @@ const ClothesType = [
   },
   {
     clothType: "Curtains",
-    icon: <Icon svgName={svgBedLinens}/>
+    icon: <Icon svgName={svgCurtains}/>
   },
   {
     clothType: "Rags",
-    icon: <Icon svgName={svgBedLinens}/>
+    icon: <Icon svgName={svgRags}/>
   },
   {
     clothType: "Suits",
-    icon: <Icon svgName={svgBedLinens}/>
+    icon: <Icon svgName={svgSuits}/>
   }
 ]
 
@@ -219,7 +222,7 @@ const POS = () => {
           {rowItems.map((item) => (
             <div
               key={item.clothType}
-              className="rounded-2xl w-1/5 h-full bg-darkBlue hover:bg-lightBlue select-none flex flex-col items-center"
+              className="rounded-2xl w-1/5 h-full bg-darkBlue hover:bg-lightBlue select-none flex flex-col items-center p-4"
             >
               <div className="pt-1" onClick={() => handleOptionClick(item.clothType)}>
                 {item.icon}

@@ -66,7 +66,7 @@ export default function ServiceModal({ laundryType, closeModal, addLaundryItem, 
         <div className="flex flex-col p-5">
           <div className="flex flex-row items-center gap-5 pb-4">
             <p className='font-bold text-2xl gap-4'>Select Service for {laundryType}:</p>
-            <select className='font-semibold text-xl' value={serviceType} onChange={handleServiceChange}>
+            <select className='font-semibold text-xl p-2 rounded-xl' value={serviceType} onChange={handleServiceChange}>
               <option className='font-semibold text-xl' value="">Select</option>
               <option className='font-semibold text-xl' value="machineWash">Machine Wash</option>
               <option className='font-semibold text-xl' value="dryClean">Dry Clean</option>
@@ -74,9 +74,9 @@ export default function ServiceModal({ laundryType, closeModal, addLaundryItem, 
           </div>
 
           {serviceType === 'machineWash' && (
-            <div className='flex flex-col h-fit pt-2 pb-4'>  
-              <p className='font-bold text-2xl pb-2'>Select Washing Option:</p>
-              <select className='font-semibold text-xl h-fit' value={washingOption} onChange={handleWashingOptionChange}>
+            <div className='flex flex-col h-fit pt-2'>  
+              <p className='font-bold text-2xl pb-2'>Select Additional Washing Option:</p>
+              <select className='font-semibold text-xl h-fit p-2 rounded-xl' value={washingOption} onChange={handleWashingOptionChange}>
                 <option className='font-semibold text-xl' value="">Select</option>
                 <option className='font-semibold text-xl' value="machineWash">Machine Wash Only</option>
                 <option className='font-semibold text-xl' value="withSoftener">with Softener</option>
@@ -88,10 +88,10 @@ export default function ServiceModal({ laundryType, closeModal, addLaundryItem, 
 
           <div className="flex flex-row items-center gap-5 pt-4 pb-4">
             <p className='font-bold text-2xl'>Clothes Quantity:</p>
-            <input className='font-semibold text-xl h-fit w-20 p-3'  type="number" value={quantity} onChange={handleQuantityChange} />
+            <input className='font-semibold text-xl h-fit w-20 p-2 rounded-xl text-center'  type="number" value={quantity} onChange={handleQuantityChange} />
           </div>
           
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-4 items-end justify-end ">
             <button className='text-xl bg-darkBlue font-semibold h-fit w-fit rounded-xl p-4' onClick={handleConfirm}>Confirm</button>
             <button className='text-xl bg-red-700 font-semibold h-fit w-fit rounded-xl p-4' onClick={handleCancel}>Cancel</button>
           </div>
