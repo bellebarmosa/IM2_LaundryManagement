@@ -14,9 +14,14 @@ const AdminSidebarData = [
     link: "/pos"
   },
   {
-    title: "Archive",
+    title: "Orders",
     icon: <LiaArchiveSolid size={30} color={"#448DB8"}/>,
-    link: "/archive"
+    link: "/order"
+  },
+  {
+    title: "Services",
+    icon: <LiaBoxSolid size={30} color={"#448DB8"}/>,
+    link: "/services"
   },
   {
     title: "Analytics",
@@ -29,19 +34,9 @@ const AdminSidebarData = [
     link: "/user"
   },
   {
-    title: "Customer",
-    icon: <LiaUsersSolid size={30} color={"#448DB8"}/>,
-    link: "/customer"
-  },
-  {
-    title: "Services",
-    icon: <LiaBoxSolid size={30} color={"#448DB8"}/>,
-    link: "/service"
-  },
-  {
     title: "Settings",
     icon: <LiaToolboxSolid size={30} color={"#448DB8"}/>,
-    link: "/accountSettings"
+    link: "/settings"
   }
 ]
 
@@ -57,19 +52,14 @@ const StoreOwnerSidebarData = [
     link: "/pos"
   },
   {
-    title: "Archive",
+    title: "Orders",
     icon: <LiaArchiveSolid size={30} color={"#448DB8"}/>,
-    link: "/archive"
+    link: "/order"
   },
   {
-    title: "Customer",
-    icon: <LiaUsersSolid size={30} color={"#448DB8"}/>,
-    link: "/customer"
-  },
-  {
-    title: "Employees",
+    title: "Services",
     icon: <LiaUserTieSolid size={30} color={"#448DB8"}/>,
-    link: "/employee"
+    link: "/services"
   },
   {
     title: "Analytics",
@@ -77,14 +67,14 @@ const StoreOwnerSidebarData = [
     link: "/analytics"
   },
   {
-    title: "Services",
-    icon: <LiaBoxSolid size={30} color={"#448DB8"}/>,
-    link: "/services"
+    title: "Employees",
+    icon: <LiaUsersCogSolid size={30} color={"#448DB8"}/>,
+    link: "/employee"
   },
   {
     title: "Settings",
     icon: <LiaToolboxSolid size={30} color={"#448DB8"}/>,
-    link: "/accountSettings"
+    link: "/settings"
   }
 ]
 
@@ -100,24 +90,14 @@ const StoreEmployeeSidebarData = [
     link: "/pos"
   },
   {
-    title: "Archive",
+    title: "Orders",
     icon: <LiaArchiveSolid size={30} color={"#448DB8"}/>,
-    link: "/archive"
-  },
-  {
-    title: "Customer",
-    icon: <LiaUsersSolid size={30} color={"#448DB8"}/>,
-    link: "/customer"
-  },
-  {
-    title: "Services",
-    icon: <LiaBoxSolid size={30} color={"#448DB8"}/>,
-    link: "/services"
+    link: "/order"
   },
   {
     title: "Settings",
     icon: <LiaToolboxSolid size={30} color={"#448DB8"}/>,
-    link: "/accountSettings"
+    link: "/settings"
   }
 ]
 
@@ -133,14 +113,14 @@ const CustomerSidebarData = [
     link: "/pos"
   },
   {
-    title: "Archive",
+    title: "Orders",
     icon: <LiaArchiveSolid size={30} color={"#448DB8"}/>,
-    link: "/archive"
+    link: "/order"
   },
   {
     title: "Settings",
     icon: <LiaToolboxSolid size={30} color={"#448DB8"}/>,
-    link: "/accountSettings"
+    link: "/settings"
   }
 ]
 
