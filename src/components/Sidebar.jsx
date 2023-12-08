@@ -140,7 +140,11 @@ const Sidebar = ({ userType }) => {
 
   return (
     <div className='flex flex-col items-center w-fit'>
-      {/* ... (your existing Sidebar code) */}
+      <img src={Logo} className='w-28 rounded-3xl select-none'/>
+      <p className='font-semibold text-darkBlue text-5xl font-alegreya-sans select-none'>iWashify</p>
+      <p className='text-xs text-black select-none font-bold tracking-widest'>POINT OF SALE SYSTEM</p>
+
+      <div className='flex flex-col items-start pt-4 gap-2'></div>
       <div className='flex flex-col items-start pt-4 gap-2'>
         {SidebarData.map((val, key) => (
           <NavLink

@@ -6,7 +6,7 @@ import {StoreEmployeeLayout} from './components/layouts/StoreEmployeeLayout';
 import {StoreOwnerLayout} from './components/layouts/StoreOwnerLayout';
 
 const App = () => {
-  const [userType, setUserType] = useState('admin');
+  const [userType, setUserType] = useState('storeOwner');
   const [loggedIn, setLoggedIn] = useState(true);
   // const userType = 'storeOwner';//BACKEND CHANGE ME
   /* userType VALUES SHOULD ONLY BE:
@@ -20,7 +20,7 @@ const App = () => {
   };
   const navbarData = [{ 
     currentPage: 'Dashboard', 
-    name: 'Admin', 
+    name: 'storeOwner', 
     email: 'admin@usc.edu.ph'   
   }]//BACKEND CHANGE ME
 
@@ -29,11 +29,11 @@ const App = () => {
       case 'admin':
         return <AdminLayout userType={userType} navbarData={navbarData}/>;
       case 'customer':
-        return <CustomerLayout />;
+        return <CustomerLayout userType={userType} navbarData={navbarData}/>;
       case 'storeOwner':
-        return <StoreOwnerLayout />;
+        return <StoreOwnerLayout userType={userType} navbarData={navbarData}/>;
       case 'storeEmployee':
-        return <StoreEmployeeLayout />;
+        return <StoreEmployeeLayout userType={userType} navbarData={navbarData}/>;
       default:
         return null;
     }

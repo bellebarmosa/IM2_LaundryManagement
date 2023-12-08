@@ -16,6 +16,7 @@ export const AdminLayout = ({ userType, navbarData }) => {
       <div className="flex flex-col h-full w-11/12 p-5 rounded-t-3xl">
         <Navbar navbarData={ navbarData }/>
         <Routes>
+          <Route path="/" element={<Dashboard userType={ userType } />}/>
           <Route path="/dashboard" element={<Dashboard userType={ userType } />}/>
           <Route path="/pos" element={<POS/>}/>
           <Route path="/order" element={<POS/>}/>
