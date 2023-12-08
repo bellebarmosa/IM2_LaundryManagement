@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { styled } from '@mui/system';
-
 
 const StyledButton = styled(Button)({
   backgroundColor: '#448DB8',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#367396'
   },
@@ -17,7 +15,7 @@ const StyledButton = styled(Button)({
 const ChangeButton = styled(Button)({
   backgroundColor: '#22c55e',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#196535',
   },
@@ -26,11 +24,90 @@ const ChangeButton = styled(Button)({
 const CancelButton = styled(Button)({
   backgroundColor: '#EF4444',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#882929',
   },
 })
+
+const PriceList = {
+  Whites: {
+    machineWash: 50,
+    withSoftener: 60,
+    withIroning: 70,
+    withSoftenerandIroning: 80,
+    dryClean: 100
+  },
+  Colored: {
+    machineWash: 60,
+    withSoftener: 70,
+    withIroning: 80,
+    withSoftenerandIroning: 90,
+    dryClean: 120
+  },
+  Delicates: {
+    machineWash: 45,
+    withSoftener: 55,
+    withIroning: 65,
+    withSoftenerandIroning: 75,
+    dryClean: 80
+  },
+  Denim: {
+    machineWash: 50,
+    withSoftener: 60,
+    withIroning: 70,
+    withSoftenerandIroning: 80,
+    dryClean: 150
+  },
+  Athletic: {
+    machineWash: 50,
+    withSoftener: 60,
+    withIroning: 70,
+    withSoftenerandIroning: 80,
+    dryClean: 100
+  },
+  Outwear: {
+    machineWash: 50,
+    withSoftener: 60,
+    withIroning: 70,
+    withSoftenerandIroning: 80,
+    dryClean: 100
+  },
+  Linens: {
+    machineWash: 50,
+    withSoftener: 60,
+    withIroning: 70,
+    withSoftenerandIroning: 80
+  },
+  Curtains: {
+    machineWash: 60,
+    withSoftener: 70,
+    withIroning: 80,
+    withSoftenerandIroning: 90,
+    dryClean: 120
+  },
+  Towels: {
+    machineWash: 30,
+    withSoftener: 40,
+    withIroning: 40,
+    withSoftenerandIroning: 50,
+    dryClean: 40
+  },
+  Rags: {
+    machineWash: 45,
+    withSoftener: 55,
+    withIroning: 65,
+    withSoftenerandIroning: 75,
+    dryClean: 80
+  },
+  Suits: {
+    machineWash: 100,
+    withSoftener: 120,
+    withIroning: 130,
+    withSoftenerandIroning: 150,
+    dryClean: 150
+  },
+};
 
 const Services = () => {
   const [services, setServices] = useState([]);
@@ -39,55 +116,68 @@ const Services = () => {
   const [editRecord, setEditRecord] = useState(null);
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/services');
-        setServices(response.data);
-      } catch (error) {
-        console.error('Error fetching services:', error);
-      }
-    };
-    fetchServices();
-  }, [services]);
+    const serviceData = Object.keys(PriceList).map((clothesType, index) => (
+      Object.keys(PriceList[clothesType]).map((serviceType, subIndex) => ({
+        id: `${index + 1}-${subIndex + 1}`,
+        clothes_type: clothesType,
+        service_type: serviceType,
+        additional_price: PriceList[clothesType][serviceType],
+      }))
+    )).flat();
+    setServices(serviceData);
+  }, []);
 
-  const handleEdit = async (record) => {
+  const handleEdit = (record) => {
     setFormValues({
-      service_name: record.service_name,
-      service_description: record.service_description,
-      service_price: record.service_price,
+      clothes_type: record.clothes_type,
+      service_type: record.service_type,
+      additional_price: record.additional_price,
     });
-
+  
     setEditRecord(record);
     setAddModalVisible(true);
   };
-
-  const handleDelete = async (record) => {
+  
+  const handleDelete = (record) => {
     try {
       const confirmed = window.confirm('Are you sure you want to delete this service?');
       if (confirmed) {
-        await axios.delete(`http://localhost:3001/services/delete/${record.service_id}`);
-        setServices(services.filter((s) => s.service_id !== record.service_id));
+        const updatedServices = services.filter((s) => s.id !== record.id);
+        setServices(updatedServices);
       }
     } catch (error) {
       console.error('Error deleting service:', error);
     }
   };
 
-  const handleAddNewService = () => {
-    setFormValues({});
-    setAddModalVisible(true);
-  };
-
-  const handleAddService = async () => {
+  const handleAddService = () => {
     try {
       if (editRecord) {
-        await axios.put(`http://localhost:3001/services/edit/${editRecord.service_id}`, formValues);
+        const updatedServices = services.map((service) =>
+          service.id === editRecord.id
+            ? {
+                ...service,
+                clothes_type: formValues.clothes_type,
+                service_type: formValues.service_type,
+                additional_price: formValues.additional_price,
+              }
+            : service
+        );
+  
+        setServices(updatedServices);
         setEditRecord(null);
       } else {
-        const response = await axios.post('http://localhost:3001/services/add', formValues);
-        setServices([...services, response.data]);
+        // Add new logic
+        const newService = {
+          id: `${services.length + 1}`,
+          clothes_type: formValues.clothes_type,
+          service_type: formValues.service_type,
+          additional_price: formValues.additional_price,
+        };
+  
+        setServices([...services, newService]);
       }
-
+  
       setFormValues({});
       setAddModalVisible(false);
     } catch (error) {
@@ -107,18 +197,18 @@ const Services = () => {
   };
 
   const columns = [
-    { field: 'service_id', headerName: 'ID', flex: 1 },
-    { field: 'service_name', headerName: 'Service Name', flex: 1 },
-    { field: 'service_description', headerName: 'Description', flex: 1 },
-    { field: 'service_price', headerName: 'Price in PHP', flex: 1 },
+    { field: 'id', headerName: 'ID', flex: 1 },
+    { field: 'clothes_type', headerName: 'Clothes Type', flex: 1 },
+    { field: 'service_type', headerName: 'Service Type', flex: 1 },
+    { field: 'additional_price', headerName: 'Additional Price', flex: 1 },
     {
       field: 'actions',
       headerName: 'Action',
       flex: 1,
       renderCell: (params) => (
         <>
-          <Button onClick={() => handleEdit(params.row)}>Edit</Button>
-          <Button onClick={() => handleDelete(params.row)}>Delete</Button>
+          <ChangeButton onClick={() => handleEdit(params.row)}>Edit</ChangeButton>
+          <CancelButton onClick={() => handleDelete(params.row)}>Delete</CancelButton>
         </>
       ),
     },
@@ -128,7 +218,7 @@ const Services = () => {
     <>
       <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
         <StyledButton
-          onClick={handleAddNewService}
+          onClick={() => setAddModalVisible(true)}
           className="mb-2 bg-darkBlue hover:bg-lightBlue text-white font-bold py-1 px-2 rounded"
         >
           Add New Service
@@ -148,36 +238,35 @@ const Services = () => {
             <DialogTitle>{editRecord ? 'Edit Service' : 'Add New Service'}</DialogTitle>
             <DialogContent>
               <TextField
-                label="Service Name"
-                name="service_name"
-                value={formValues.service_name || ''}
+                label="Clothes Type"
+                name="clothes_type"
+                value={formValues.clothes_type || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
               />
               <TextField
-                label="Description"
-                name="service_description"
-                value={formValues.service_description || ''}
+                label="Service Type"
+                name="service_type"
+                value={formValues.service_type || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
-                multiline rows={3}
               />
               <TextField
-                label="Price in PHP"
+                label="Additional Price"
                 type="number"
                 step=".01"
                 min="0"
-                name="service_price"
-                value={formValues.service_price || ''}
+                name="additional_price"
+                value={formValues.additional_price || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
               />
             </DialogContent>
             <DialogActions>
-              <ChangeButton onClick={handleAddService} color="primary" variant="contained">
+              <ChangeButton onClick={() => handleAddService()} color="primary" variant="contained">
                 {editRecord ? 'Update Service' : 'Add Service'}
               </ChangeButton>
               <CancelButton onClick={handleCancel} color="primary">
