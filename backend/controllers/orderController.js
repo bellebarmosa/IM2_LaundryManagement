@@ -287,8 +287,6 @@ router.post("/addOrder", async (req, res) => {
 });
 
 
-
-
 router.get ('/orders', async (req,res)=>{
   let query = "SELECT * FROM orders"
 
