@@ -66,9 +66,13 @@ const App = () => {
     
 
     <div className='flex flex-row h-screen'>
-      <Router>
+  <Router>
  <Routes>
+
+
+ 
   <Route exact path='/pos' Component={PosPage}/>
+
   </Routes>
   </Router>
       {/* {userType && <div className='w-fit p-5'>
@@ -79,7 +83,7 @@ const App = () => {
         <Dashboard userType={ userType }/>
       </div> } */}
       {/* <SignUp/>  */}
-       {/* <Login/>  */}
+       <Login/> 
     </div>
   )
 }
