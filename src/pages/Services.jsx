@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 const Services = () => {
   const [services, setServices] = useState([]);
@@ -75,103 +77,86 @@ const Services = () => {
     });
   };
 
+  const columns = [
+    { field: 'service_id', headerName: 'ID', flex: 1 },
+    { field: 'service_name', headerName: 'Service Name', flex: 1 },
+    { field: 'service_description', headerName: 'Description', flex: 1 },
+    { field: 'service_price', headerName: 'Price in PHP', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Action',
+      flex: 1,
+      renderCell: (params) => (
+        <>
+          <Button onClick={() => handleEdit(params.row)}>Edit</Button>
+          <Button onClick={() => handleDelete(params.row)}>Delete</Button>
+        </>
+      ),
+    },
+  ];
+
   return (
     <>
       <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
-        <button
+        <Button
           onClick={handleAddNewService}
           className="mb-2 bg-darkBlue hover:bg-lightBlue text-white font-bold py-1 px-2 rounded"
         >
           Add New Service
-        </button>
-        <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5">
-          <table className="w-full table-fixed border-collapse">
-            <thead>
-              <tr>
-                <th className="w-1/8 text-darkBlue">ID</th>
-                <th className="w-1/8 text-darkBlue">Service Name</th>
-                <th className="w-1/8 text-darkBlue">Description</th>
-                <th className="w-1/8 text-darkBlue">Price in PHP</th>
-                <th className="w-1/8 text-darkBlue">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {services.map((record) => (
-                <tr key={record.service_id}>
-                  <td>{record.service_id}</td>
-                  <td>{record.service_name}</td>
-                  <td>{record.service_description}</td>
-                  <td>{record.service_price}</td>
-                  <td>
-                    <button
-                      onClick={() => handleEdit(record)}
-                      className="mr-2 bg-darkBlue hover:bg-lightBlue text-white font-bold py-1 px-2 rounded"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(record)}
-                      className="bg-darkBlue hover:bg-lightBlue text-white font-bold py-1 px-2 rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {addModalVisible && (
-            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-              <div className="bg-brightYellow p-5 rounded">
-                <div className="mb-2">
-                  <label className="block text-darkBlue">Service Name:</label>
-                  <input
-                    type="text"
-                    name="service_name"
-                    value={formValues.service_name || ''}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
-                <div className="mb-2">
-                  <label className="block text-darkBlue">Description:</label>
-                  <textarea
-                    name="service_description"
-                    value={formValues.service_description || ''}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
-                <div className="mb-2">
-                  <label className="block text-darkBlue">Price in PHP:</label>
-                  <input
-                    type="number"
-                    step=".01"
-                    min="0"
-                    name="service_price"
-                    value={formValues.service_price || ''}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
-                <div className="flex justify-end mt-4">
-                  <button
-                    onClick={handleAddService}
-                    className="bg-darkBlue hover:bg-lightBlue text-white font-bold py-2 px-4 rounded"
-                  >
-                    {editRecord ? 'Update Service' : 'Add Service'}
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    className="ml-2 bg-darkBlue hover:bg-lightBlue text-white font-bold py-2 px-4 rounded"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+        </Button>
+        <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5 h-full">
+          <DataGrid
+            rows={services}
+            columns={columns}
+            pageSize={6}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
         </div>
+        {addModalVisible && (
+          <Dialog open={addModalVisible} onClose={handleCancel}>
+            <DialogTitle>{editRecord ? 'Edit Service' : 'Add New Service'}</DialogTitle>
+            <DialogContent>
+              <TextField
+                label="Service Name"
+                name="service_name"
+                value={formValues.service_name || ''}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Description"
+                name="service_description"
+                value={formValues.service_description || ''}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                multiline rows={3}
+              />
+              <TextField
+                label="Price in PHP"
+                type="number"
+                step=".01"
+                min="0"
+                name="service_price"
+                value={formValues.service_price || ''}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleAddService} color="primary" variant="contained">
+                {editRecord ? 'Update Service' : 'Add Service'}
+              </Button>
+              <Button onClick={handleCancel} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </div>
     </>
   );
