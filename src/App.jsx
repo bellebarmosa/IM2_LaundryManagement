@@ -40,8 +40,8 @@ const App = () => {
         {/* <Analytics/> */}
         {/* <Employees/> */}
         {/* <Orders/> */}
-        {/* <Analytics/> */}
-        <Clothes/>
+        {/* <Clothes/> */}
+        <Services/>
     </div>
       {/* <SignUp/>
       <Login/> */}
