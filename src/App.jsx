@@ -1,18 +1,3 @@
-<<<<<<< Updated upstream
-import { useState } from 'react'
-import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <Navbar/>
-      <Sidebar/>
-      <h1>Hi belle</h1>
-    </>
-=======
 import React, { useEffect, useState} from 'react'
 import Axios from 'axios';
 import Navbar from './components/Navbar'
@@ -20,6 +5,8 @@ import Sidebar from './components/Sidebar'
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Dashboard from './components/Dashboard'
+import {BrowserRouter as Router, Route,Routes } from 'react-router-dom'
+import PosPage from './components/posPage'
 
 const App = () => {
   // const userType = 'storeOwner';//BACKEND CHANGE ME
@@ -40,6 +27,11 @@ const App = () => {
   //"employee_eMail": "storeOwner@gmail.com", //storeOwner
   // "employee_password": "092"
 
+  <Routes>
+ <Route exact path='/pos' Component={PosPage}/>
+  </Routes>
+
+
 
   const [userType, setUserType] = useState(null);
   const [navbarData, setNavbarData] = useState(null);
@@ -50,7 +42,6 @@ const App = () => {
       try {
         // 
         const response = await Axios.get('http://localhost:3001/user/profile', { withCredentials: true });
-
         if (response.data.user) {
           // Token exists, set user type and navbar data
           setUserType(response.data.user.employee_role);
@@ -86,7 +77,6 @@ const App = () => {
       {/* <SignUp/>  */}
        <Login/> 
     </div>
->>>>>>> Stashed changes
   )
 }
 

@@ -1,11 +1,4 @@
 import React from 'react';
-<<<<<<< Updated upstream
-
-const Sidebar = () => {
-  return(
-    <div>
-      <h2>I am the sidebar</h2>
-=======
 import Logo from '../assets/iWashify.png'
 import { LiaHomeSolid, LiaCalculatorSolid, LiaUsersCogSolid, LiaUserTieSolid , LiaArchiveSolid, LiaUsersSolid, LiaChartBarSolid, LiaBoxSolid , LiaToolboxSolid, LiaSignOutAltSolid   } from "react-icons/lia";
 
@@ -193,7 +186,6 @@ const Sidebar = ({ userType }) => {
             <p className='text-warningRed font-bold text-2xl pl-3'>Logout</p>
           </div>
       </div>
->>>>>>> Stashed changes
     </div>
   )
 }

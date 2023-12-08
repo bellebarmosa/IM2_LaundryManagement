@@ -1,11 +1,4 @@
 import React from 'react';
-<<<<<<< Updated upstream
-
-const Navbar = () => {
-  return(
-    <div>
-      <h2>I am the navbar</h2>
-=======
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoPersonCircle } from "react-icons/io5";
 
@@ -31,7 +24,6 @@ const Navbar = ({ navbarData }) => {
           </p>
         </div>
       </div>
->>>>>>> Stashed changes
     </div>
   )
 }
