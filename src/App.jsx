@@ -27,11 +27,8 @@ const App = () => {
   //"employee_eMail": "storeOwner@gmail.com", //storeOwner
   // "employee_password": "092"
 
-  <Routes>
- <Route exact path='/pos' Component={PosPage}/>
-  </Routes>
-
-
+  
+ 
 
   const [userType, setUserType] = useState(null);
   const [navbarData, setNavbarData] = useState(null);
@@ -66,16 +63,23 @@ const App = () => {
 
   return (
 
+    
+
     <div className='flex flex-row h-screen'>
-      {userType && <div className='w-fit p-5'>
+      <Router>
+ <Routes>
+  <Route exact path='/pos' Component={PosPage}/>
+  </Routes>
+  </Router>
+      {/* {userType && <div className='w-fit p-5'>
         <Sidebar userType={ userType }/>
       </div> }
       {navbarData && <div className="flex flex-col h-full w-11/12 p-5 rounded-t-3xl">
        <Navbar navbarData={ navbarData }/>
         <Dashboard userType={ userType }/>
-      </div> }
+      </div> } */}
       {/* <SignUp/>  */}
-       <Login/> 
+       {/* <Login/>  */}
     </div>
   )
 }

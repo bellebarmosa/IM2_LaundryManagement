@@ -4,13 +4,8 @@ import Axios from 'axios'
 import PopUPgarment from './PopUPgarment';
 import PopUPservice from './PopUPservice';
 import { useNavigate } from "react-router-dom";
+import './pospage.css'
 
-
-//TO DO
-//ADD MIDDLEWARE TO PROTECT ROUTES
-//REDO USER AUTH DO JWT
-// I didnt do the ADD ORDER in AdminOrders kay it should just be in the pos page
-//
 
 
 
@@ -68,7 +63,7 @@ useEffect(() => {
         if(response.err){
           console.log(response.err)
         }else{
-          
+  
           setwServices(response.data);
         }
       })

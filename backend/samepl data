@@ -1,0 +1,59 @@
+/*NOTHING IMPORTANT HERE
+  USED THIS TO CHECK WHAT DATA WAS BEING PASSED 
+  AND COMPARE MY DIFFERENT CODE VERSIONS
+*/    
+    
+    const employee 
+    //Sample employee 
+    //   employee_ID: 1,
+    //   employee_name: 'admin',
+    //   employee_phone: '092922',
+    //   employee_eMail: 'admin@admin',
+    //   employee_role: 'admin',
+    //   employee_password: '1234'
+    // }
+///////////////////////////////////////////////////
+    const customer
+   // { sample customer //One object
+    //     customer_ID: 1,
+    //     customer_name: 'John Doe',
+    //     customer_phone: '02222',
+    //     customer_eMail: 'JohnDoe@gmail.com'
+    //   }
+//////////////////////////////////////////////////
+    const newOrder || service cart
+    // [ sample order //array of objects
+    //     {
+    //       service_ID: 1,
+    //       service_name: 'Wash & Fold ',
+    //       service_description: 'Charge per Kg',
+    //       service_price: 30,
+    //       chargePer: 'Weight',
+    //       garmentsIn: [
+    //                      { garment_ID: 1, garment_name: 'Shirt', price: 20, quantity: 2 },
+    //                      { garment_ID: 2, garment_name: 'Pants', price: 15, quantity: 1 },
+    //                      { garment_ID: 3, garment_name: 'Socks', price: 10, quantity: 1 }
+    //                   ],
+    //       qty: '3',
+    //       amount: 90
+    //     },
+    //     {
+    //       service_ID: 4,
+    //       service_name: 'HANDWASH-DRY-FOLD',
+    //       service_description: 'a',
+    //       service_price: 50,
+    //       chargePer: 'Weight',
+    //       garmentsIn: [ { garment_ID: 4, garment_name: 'Suit', price: 100, quantity: 2 } ],
+    //       qty: '2',
+    //       amount: 100
+    //     }
+    //   ]
+///////////////////////////////////////////////////
+    const order_pickUP
+    //2023-11-26
+/////////////////////////////////////////////////
+const order_paidAmount
+//int paid amount
+///////////////////////////////////////////////////////////////////////
+
+    
