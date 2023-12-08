@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem } from '@mui/material';
 import { styled } from '@mui/system';
 
 const StyledButton = styled(Button)({
-    backgroundColor: '#448DB8',
-    color: 'white',
-    fontweight: 'Bold',
-    '&:hover': {
-      backgroundColor: '#367396'
-    },
-  });
+  backgroundColor: '#448DB8',
+  color: 'white',
+  fontWeight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#367396'
+  },
+});
 
 const ChangeButton = styled(Button)({
-    backgroundColor: '#22c55e',
-    color: 'white',
-    fontweight: 'Bold',
-    '&:hover': {
-      backgroundColor: '#196535',
-    },
+  backgroundColor: '#22c55e',
+  color: 'white',
+  fontWeight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#196535',
+  },
 })
 
 const CancelButton = styled(Button)({
-    backgroundColor: '#EF4444',
-    color: 'white',
-    fontweight: 'Bold',
-    '&:hover': {
-      backgroundColor: '#882929',
-    },
+  backgroundColor: '#EF4444',
+  color: 'white',
+  fontWeight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#882929',
+  },
 })
 
 const Orders = () => {
@@ -37,19 +36,18 @@ const Orders = () => {
   const [formValues, setFormValues] = useState({});
   const [editRecord, setEditRecord] = useState(null);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/orders');
-        setOrders(response.data);
-      } catch (error) {
-        console.error('Error fetching orders:', error);
-      }
-    };
-    fetchOrders();
-  }, [orders]);
+  // Placeholder data with unique id property
+  const placeholderData = [
+    { id: 1, order_id: 1, order_date: '2023-01-01', customer_name: 'John Doe', order_total: 50.99, paid_amount: 20.00, status: 'Pending' },
+    { id: 2, order_id: 2, order_date: '2023-01-02', customer_name: 'Jane Smith', order_total: 30.50, paid_amount: 30.50, status: 'Completed' },
+    { id: 3, order_id: 3, order_date: '2023-01-03', customer_name: 'Bob Johnson', order_total: 80.00, paid_amount: 0.00, status: 'Canceled' },
+  ];
 
-  const handleEdit = async (record) => {
+  useEffect(() => {
+    setOrders(placeholderData);
+  }, []);
+
+  const handleEdit = (record) => {
     setFormValues({
       order_id: record.order_id,
       order_date: record.order_date,
@@ -63,15 +61,10 @@ const Orders = () => {
     setAddModalVisible(true);
   };
 
-  const handleDelete = async (record) => {
-    try {
-      const confirmed = window.confirm('Are you sure you want to delete this order?');
-      if (confirmed) {
-        await axios.delete(`http://localhost:3001/orders/delete/${record.order_id}`);
-        setOrders(orders.filter((o) => o.order_id !== record.order_id));
-      }
-    } catch (error) {
-      console.error('Error deleting order:', error);
+  const handleDelete = (record) => {
+    const confirmed = window.confirm('Are you sure you want to delete this order?');
+    if (confirmed) {
+      setOrders(orders.filter((o) => o.id !== record.id));
     }
   };
 
@@ -80,21 +73,22 @@ const Orders = () => {
     setAddModalVisible(true);
   };
 
-  const handleAddOrder = async () => {
-    try {
-      if (editRecord) {
-        await axios.put(`http://localhost:3001/orders/edit/${editRecord.order_id}`, formValues);
-        setEditRecord(null);
-      } else {
-        const response = await axios.post('http://localhost:3001/orders/add', formValues);
-        setOrders([...orders, response.data]); 
-      }
-
-      setFormValues({});
-      setAddModalVisible(false);
-    } catch (error) {
-      console.error('Error adding/editing order:', error);
+  const handleAddOrder = () => {
+    if (editRecord) {
+      // Update logic for placeholder data
+      setOrders((prevOrders) => {
+        const updatedOrders = prevOrders.map((o) => (o.id === editRecord.id ? { ...o, ...formValues } : o));
+        return updatedOrders;
+      });
+      setEditRecord(null);
+    } else {
+      // Add logic for placeholder data
+      const newOrder = { id: orders.length + 1, ...formValues };
+      setOrders((prevOrders) => [...prevOrders, newOrder]);
     }
+
+    setFormValues({});
+    setAddModalVisible(false);
   };
 
   const handleCancel = () => {

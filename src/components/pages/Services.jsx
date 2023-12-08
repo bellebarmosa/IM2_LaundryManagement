@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { styled } from '@mui/system';
 
-
 const StyledButton = styled(Button)({
   backgroundColor: '#448DB8',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#367396'
   },
@@ -17,20 +15,20 @@ const StyledButton = styled(Button)({
 const ChangeButton = styled(Button)({
   backgroundColor: '#22c55e',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#196535',
   },
-})
+});
 
 const CancelButton = styled(Button)({
   backgroundColor: '#EF4444',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#882929',
   },
-})
+});
 
 const Services = () => {
   const [services, setServices] = useState([]);
@@ -38,19 +36,18 @@ const Services = () => {
   const [formValues, setFormValues] = useState({});
   const [editRecord, setEditRecord] = useState(null);
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/services');
-        setServices(response.data);
-      } catch (error) {
-        console.error('Error fetching services:', error);
-      }
-    };
-    fetchServices();
-  }, [services]);
+  // Placeholder data with unique id property
+  const placeholderData = [
+    { id: 1, service_id: 1, service_name: 'Placeholder Service 1', service_description: 'Description 1', service_price: 20.99 },
+    { id: 2, service_id: 2, service_name: 'Placeholder Service 2', service_description: 'Description 2', service_price: 15.99 },
+    { id: 3, service_id: 3, service_name: 'Placeholder Service 3', service_description: 'Description 3', service_price: 30.50 },
+  ];
 
-  const handleEdit = async (record) => {
+  useEffect(() => {
+    setServices(placeholderData);
+  }, []);
+
+  const handleEdit = (record) => {
     setFormValues({
       service_name: record.service_name,
       service_description: record.service_description,
@@ -61,15 +58,10 @@ const Services = () => {
     setAddModalVisible(true);
   };
 
-  const handleDelete = async (record) => {
-    try {
-      const confirmed = window.confirm('Are you sure you want to delete this service?');
-      if (confirmed) {
-        await axios.delete(`http://localhost:3001/services/delete/${record.service_id}`);
-        setServices(services.filter((s) => s.service_id !== record.service_id));
-      }
-    } catch (error) {
-      console.error('Error deleting service:', error);
+  const handleDelete = (record) => {
+    const confirmed = window.confirm('Are you sure you want to delete this service?');
+    if (confirmed) {
+      setServices(services.filter((s) => s.id !== record.id));
     }
   };
 
@@ -78,21 +70,22 @@ const Services = () => {
     setAddModalVisible(true);
   };
 
-  const handleAddService = async () => {
-    try {
-      if (editRecord) {
-        await axios.put(`http://localhost:3001/services/edit/${editRecord.service_id}`, formValues);
-        setEditRecord(null);
-      } else {
-        const response = await axios.post('http://localhost:3001/services/add', formValues);
-        setServices([...services, response.data]);
-      }
-
-      setFormValues({});
-      setAddModalVisible(false);
-    } catch (error) {
-      console.error('Error adding/editing service:', error);
+  const handleAddService = () => {
+    if (editRecord) {
+      // Update logic for placeholder data
+      setServices((prevServices) => {
+        const updatedServices = prevServices.map((s) => (s.id === editRecord.id ? { ...s, ...formValues } : s));
+        return updatedServices;
+      });
+      setEditRecord(null);
+    } else {
+      // Add logic for placeholder data
+      const newService = { id: services.length + 1, ...formValues };
+      setServices((prevServices) => [...prevServices, newService]);
     }
+
+    setFormValues({});
+    setAddModalVisible(false);
   };
 
   const handleCancel = () => {
@@ -162,7 +155,8 @@ const Services = () => {
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
-                multiline rows={3}
+                multiline
+                rows={3}
               />
               <TextField
                 label="Price in PHP"

@@ -6,7 +6,7 @@ import {StoreEmployeeLayout} from './components/layouts/StoreEmployeeLayout';
 import {StoreOwnerLayout} from './components/layouts/StoreOwnerLayout';
 
 const App = () => {
-  const [userType, setUserType] = useState('storeOwner');
+  const [userType, setUserType] = useState('admin');
   const [loggedIn, setLoggedIn] = useState(true);
   // const userType = 'storeOwner';//BACKEND CHANGE ME
   /* userType VALUES SHOULD ONLY BE:

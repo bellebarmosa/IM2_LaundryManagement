@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { styled } from '@mui/system';
@@ -7,7 +6,7 @@ import { styled } from '@mui/system';
 const StyledButton = styled(Button)({
   backgroundColor: '#448DB8',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#367396'
   },
@@ -16,20 +15,20 @@ const StyledButton = styled(Button)({
 const ChangeButton = styled(Button)({
   backgroundColor: '#22c55e',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#196535',
   },
-})
+});
 
 const CancelButton = styled(Button)({
   backgroundColor: '#EF4444',
   color: 'white',
-  fontweight: 'Bold',
+  fontWeight: 'Bold',
   '&:hover': {
     backgroundColor: '#882929',
   },
-})
+});
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -37,40 +36,33 @@ const Employees = () => {
   const [formValues, setFormValues] = useState({});
   const [editRecord, setEditRecord] = useState(null);
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/user/employees');
-        setEmployees(response.data);
-      } catch (error) {
-        console.error('Error fetching employees:', error);
-      }
-    };
-    fetchEmployees();
-  }, [employees]);
+  // Placeholder data with unique id property
+  const placeholderData = [
+    { id: 1, employee_ID: 1, employee_name: 'John Doe', employee_phone: '123-456-7890', employee_eMail: 'john@example.com', employee_role: 'Manager' },
+    { id: 2, employee_ID: 2, employee_name: 'Jane Doe', employee_phone: '987-654-3210', employee_eMail: 'jane@example.com', employee_role: 'Developer' },
+    { id: 3, employee_ID: 3, employee_name: 'Bob Smith', employee_phone: '555-555-5555', employee_eMail: 'bob@example.com', employee_role: 'Designer' },
+  ];
 
-  const handleEdit = async (record) => {
+  useEffect(() => {
+    setEmployees(placeholderData);
+  }, []);
+
+  const handleEdit = (record) => {
     setFormValues({
       employee_name: record.employee_name,
       employee_phone: record.employee_phone,
       employee_eMail: record.employee_eMail,
       employee_role: record.employee_role,
-      employee_password: record.employee_password,
     });
 
     setEditRecord(record);
     setAddModalVisible(true);
   };
 
-  const handleDelete = async (record) => {
-    try {
-      const confirmed = window.confirm('Are you sure you want to delete this employee?');
-      if (confirmed) {
-        await axios.delete(`http://localhost:3001/user/delete/${record.employee_ID}`);
-        setEmployees(employees.filter((e) => e.employee_ID !== record.employee_ID));
-      }
-    } catch (error) {
-      console.error('Error deleting employee:', error);
+  const handleDelete = (record) => {
+    const confirmed = window.confirm('Are you sure you want to delete this employee?');
+    if (confirmed) {
+      setEmployees(employees.filter((e) => e.id !== record.id));
     }
   };
 
@@ -79,21 +71,22 @@ const Employees = () => {
     setAddModalVisible(true);
   };
 
-  const handleAddEmployee = async () => {
-    try {
-      if (editRecord) {
-        await axios.put(`http://localhost:3001/user/edit/${editRecord.employee_ID}`, formValues);
-        setEditRecord(null);
-      } else {
-        const response = await axios.post('http://localhost:3001/user/register', formValues);
-        setEmployees([...employees, response.data]);
-      }
-
-      setFormValues({});
-      setAddModalVisible(false);
-    } catch (error) {
-      console.error('Error adding/editing employee:', error);
+  const handleAddEmployee = () => {
+    if (editRecord) {
+      // Update logic for placeholder data
+      setEmployees((prevEmployees) => {
+        const updatedEmployees = prevEmployees.map((e) => (e.id === editRecord.id ? { ...e, ...formValues } : e));
+        return updatedEmployees;
+      });
+      setEditRecord(null);
+    } else {
+      // Add logic for placeholder data
+      const newEmployee = { id: employees.length + 1, ...formValues };
+      setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
     }
+
+    setFormValues({});
+    setAddModalVisible(false);
   };
 
   const handleCancel = () => {
@@ -129,9 +122,10 @@ const Employees = () => {
   return (
     <>
       <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
-      <StyledButton
+        <StyledButton
           onClick={handleAddNewEmployee}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"> 
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+        >
           Add New Employee
         </StyledButton>
         <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5 h-full">
