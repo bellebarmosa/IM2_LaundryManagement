@@ -3,6 +3,33 @@ import axios from 'axios';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
+const StyledButton = styled(Button)({
+  backgroundColor: '#448DB8',
+  color: 'white',
+  fontweight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#367396'
+  },
+});
+
+const ChangeButton = styled(Button)({
+  backgroundColor: '#22c55e',
+  color: 'white',
+  fontweight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#196535',
+  },
+})
+
+const CancelButton = styled(Button)({
+  backgroundColor: '#EF4444',
+  color: 'white',
+  fontweight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#882929',
+  },
+})
+
 const Services = () => {
   const [services, setServices] = useState([]);
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -98,12 +125,12 @@ const Services = () => {
   return (
     <>
       <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
-        <Button
+        <StyledButton
           onClick={handleAddNewService}
           className="mb-2 bg-darkBlue hover:bg-lightBlue text-white font-bold py-1 px-2 rounded"
         >
           Add New Service
-        </Button>
+        </StyledButton>
         <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5 h-full">
           <DataGrid
             rows={services}
@@ -148,12 +175,12 @@ const Services = () => {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleAddService} color="primary" variant="contained">
+              <ChangeButton onClick={handleAddService} color="primary" variant="contained">
                 {editRecord ? 'Update Service' : 'Add Service'}
-              </Button>
-              <Button onClick={handleCancel} color="primary">
+              </ChangeButton>
+              <CancelButton onClick={handleCancel} color="primary">
                 Cancel
-              </Button>
+              </CancelButton>
             </DialogActions>
           </Dialog>
         )}

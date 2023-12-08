@@ -3,6 +3,33 @@ import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
+const StyledButton = styled(Button)({
+  backgroundColor: '#448DB8',
+  color: 'white',
+  fontweight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#367396'
+  },
+});
+
+const ChangeButton = styled(Button)({
+  backgroundColor: '#22c55e',
+  color: 'white',
+  fontweight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#196535',
+  },
+})
+
+const CancelButton = styled(Button)({
+  backgroundColor: '#EF4444',
+  color: 'white',
+  fontweight: 'Bold',
+  '&:hover': {
+    backgroundColor: '#882929',
+  },
+})
+
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -100,13 +127,12 @@ const Employees = () => {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3"> 
-      <Button // ngano mani huhu di ma tarong ang styling
+      <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
+      <StyledButton
           onClick={handleAddNewEmployee}
-          // ambot
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"> 
           Add New Employee
-        </Button>
+        </StyledButton>
         <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5 h-full">
           <DataGrid
             rows={employees}
@@ -155,12 +181,12 @@ const Employees = () => {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleAddEmployee} color="primary" variant="contained">
+              <ChangeButton onClick={handleAddEmployee} color="primary" variant="contained">
                 {editRecord ? 'Update Employee' : 'Add Employee'}
-              </Button>
-              <Button onClick={handleCancel} color="primary">
+              </ChangeButton>
+              <CancelButton onClick={handleCancel} color="primary">
                 Cancel
-              </Button>
+              </CancelButton>
             </DialogActions>
           </Dialog>
         )}
