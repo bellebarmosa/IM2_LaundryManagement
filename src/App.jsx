@@ -26,9 +26,10 @@ const App = () => {
   //example accounts
   //"employee_eMail": "storeOwner@gmail.com", //storeOwner
   // "employee_password": "092"
+  //admin@admin //admin
+  //1234
 
-  
- 
+
 
   const [userType, setUserType] = useState(null);
   const [navbarData, setNavbarData] = useState(null);
@@ -63,28 +64,22 @@ const App = () => {
 
   return (
 
-    
 
     <div className='flex flex-row h-screen'>
-  <Router>
- <Routes>
-
-
- <Route exact path='/' Component={Login}/>
-  <Route exact path='/pos' Component={PosPage}/>
-
-  </Routes>
-  </Router>
-      {/* {userType && <div className='w-fit p-5'>
+      
+      {userType && <div className='w-fit p-5'>
         <Sidebar userType={ userType }/>
       </div> }
+
       {navbarData && <div className="flex flex-col h-full w-11/12 p-5 rounded-t-3xl">
        <Navbar navbarData={ navbarData }/>
         <Dashboard userType={ userType }/>
-      </div> } */}
+      </div> }
+      
       {/* <SignUp/>  */}
-       {/* <Login/>  */}
+       <Login/> 
     </div>
+  
   )
 }
 

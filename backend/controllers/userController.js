@@ -46,7 +46,7 @@ router.get('/employees', verifyToken ,async (req,res)=>{
   }
 })
 
-router.put('/edit/:employeeID', async (req, res) => {
+router.put('/edit/:employeeID',verifyToken ,async (req, res) => {
     try {
       const employeeID = req.params.employeeID;
 
@@ -98,6 +98,7 @@ router.put('/edit/:employeeID', async (req, res) => {
     }
   });
 
+  
   //adds employees 
   router.post('/register', async (req, res) => {
     try {
@@ -154,21 +155,7 @@ router.put('/edit/:employeeID', async (req, res) => {
     }
   });
 
-  // router.get('/profile', (req, res) => {
-  //   const token = req.cookies.token;
-  
-  //   if (!token) {
-  //     return res.status(401).send({ message: 'Not authenticated' });
-  //   }
-  
-  //   jwt.verify(token, process.env_ACCESS_TOKEN_SECRET, (err, user) => {
-  //     if (err) {
-  //       return res.status(401).send({ message: 'Invalid token' });
-  //     }
-  
-  //     res.send({ user });
-  //   });
-  // });  
+
 
   
 router.post('/login', async (req, res) => {
@@ -222,6 +209,6 @@ router.get('/totalsales',async (req,res)=>{
     })
 })
 
-router.get('/customers')
+
 
 module.exports = router;

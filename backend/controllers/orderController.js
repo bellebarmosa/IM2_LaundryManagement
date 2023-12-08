@@ -335,44 +335,38 @@ router.get ('/recentorders', async(req,res)=>{
   }
 });
 
+router.put('/editorder/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { updatedData } = req.body;
 
+    const updateOrderQuery =
+      'UPDATE orders SET  order_total = ?, order_paidAmount = ?, order_status = ? WHERE order_ID = ?';
 
-
-
-
-
-// router.put('/editorder/:orderId', async (req, res) => {
-//   try {
-//     const { orderId } = req.params;
-//     const { updatedData } = req.body;
-
-//     const updateOrderQuery =
-//       'UPDATE orders SET  order_total = ?, order_paidAmount = ?, order_status = ? WHERE order_ID = ?';
-
-//     db.query(
-//       updateOrderQuery,
-//       [
-//         updatedData.orderInfo,
-//         updatedData.order_total,
-//         updatedData.order_paidAmount,
-//         updatedData.storeName,
-//         updatedData.order_status,
-//         orderId,
-//       ],
-//       (err, result) => {
-//         if (err) {
-//           console.error(err);
-//           res.status(500).send({ error: 'Internal Server Error' });
-//         } else {
-//           res.send(result);
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send({ error: 'Internal Server Error' });
-//   }
-// });
+    db.query(
+      updateOrderQuery,
+      [
+        updatedData.orderInfo,
+        updatedData.order_total,
+        updatedData.order_paidAmount,
+        updatedData.storeName,
+        updatedData.order_status,
+        orderId,
+      ],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send({ error: 'Internal Server Error' });
+        } else {
+          res.send(result);
+        }
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
 
 router.delete('/deleteService/:serviceId', async (req, res) => {
   try {
@@ -395,49 +389,21 @@ router.delete('/deleteService/:serviceId', async (req, res) => {
   }
 });
 
-// const db = require('../path/to/your/db-module');
-
-// // Define the route for updating an order
-// router.put('/order/editorder/:orderId', async (req, res) => {
-//   try {
-//     const { orderId } = req.params;
-//     const updatedData = req.body;
-
-//     // Update the order in the database
-//     const updateOrderQuery = `
-//       UPDATE orders
-//       SET order_total = ?,
-//           order_status = ?,
-//           order_paidAmount = ?,
-//           storeName = ?
-//       WHERE order_ID = ?;
-//     `;
-
-//     db.query(
-//       updateOrderQuery,
-//       [
-//         updatedData.order_total,
-//         updatedData.order_status,
-//         updatedData.order_paidAmount,
-//         updatedData.storeName,
-//         orderId,
-//       ],
-//       (err, result) => {
-//         if (err) {
-//           console.error(err);
-//           res.status(500).send({ error: 'Internal Server Error' });
-//         } else {
-//           res.status(200).send({ message: 'Order updated successfully' });
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send({ error: 'Internal Server Error' });
-//   }
-// });
 
 
+
+
+
+router.get('/oderDetails/:order_ID', async (req,res)=>{
+
+  const query=""
+
+  const order_ID = req.params.order_ID;
+ 
+
+
+
+})
 
 
 

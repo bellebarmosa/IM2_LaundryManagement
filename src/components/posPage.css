@@ -165,19 +165,6 @@
     cursor: pointer;
   }
   
-  input[type="text"], input[type="password"], input[type="email"], textarea, select {
-    display:block;
-    margin:0 auto;
-    background-color: #E5E8CD;
-    border-color: #E5E8CD;
-    border-radius: 8px;
-    color:#0D597F;
-    height: 30px;
-    width: 400px;
-    border:none;
-    outline:none;
-  }
-  
   .loginbox {
     color:#0D597F;
     background-color: #FFF5CF;
@@ -206,15 +193,7 @@
     margin:0 auto;
   }
   
-  .error-box {
-    /* background-color:rgb(206, 53, 53); */
-    width:400px;
-    margin:auto;
-    color:#0b435e;
-    border-radius: 50px;
-    padding:10px;
-  }
- 
+  
   
   
   
