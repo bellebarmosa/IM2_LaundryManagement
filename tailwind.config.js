@@ -9,7 +9,11 @@ export default {
         "brightYellow": '#FFFADD',
         "fadedYellow": "#FFDFA4",
         "warningRed":"#D4092E",
-        "screenYellow":"#E6E9CE"
+        "screenYellow":"#E6E9CE",
+        "strongRed":"#fc4e03",
+        "weakRed":"#eb9571",
+        "strongGreen":"#269900",
+        "weakGreen":"#aee09d"
       },
       fontFamily: {
         'alegreya-sans': ['Alegreya Sans SC', 'sans-serif'],

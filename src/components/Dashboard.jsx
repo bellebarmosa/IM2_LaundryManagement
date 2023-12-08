@@ -103,7 +103,6 @@ const DefaultDashboard = () => {
 
   return (
     <div className='w-full h-full px-8 p-3 bg-brightYellow rounded-b-3xl'>
-
       <div className="flex flex-row items-center gap-5">
         <div className="flex flex-row w-1/2 bg-screenYellow p-3 rounded-2xl">
           <div className="flex items-center pl-2">
