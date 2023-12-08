@@ -5,9 +5,13 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Dashboard from './components/Dashboard';
 import POS from './components/POS';
+import Employees from './pages/Employees';
+import Services from './pages/Services';
+import Settings from './pages/settings/Settings';
+import Orders from './pages/Orders';
 
 const App = () => {
-  const userType = 'storeOwner';//BACKEND CHANGE ME
+  const userType = 'admin';//BACKEND CHANGE ME
   /* userType VALUES SHOULD ONLY BE:
     - 'admin'
     - 'storeOwner'
@@ -29,10 +33,14 @@ const App = () => {
       <div className="flex flex-col h-full w-11/12 p-5 rounded-t-3xl">
         <Navbar navbarData={ navbarData }/>
         {/* <Dashboard userType={ userType }/> */}
-        <POS/>
-      </div>
-      {/* <SignUp/> */}
-      {/* <Login/> */}
+        {/* <Settings userType={ userType }/> */}
+        {/* <POS/> */}
+        {/* <Analytics/> */}
+        {/* <Employees/> */}
+        <Orders/>
+    </div>
+      {/* <SignUp/>
+      <Login/> */}
     </div>
   )
 }
