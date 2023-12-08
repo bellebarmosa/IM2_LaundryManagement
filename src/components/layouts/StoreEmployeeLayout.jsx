@@ -7,7 +7,7 @@ import POS from '../pages/POS';
 import { NotFound } from '../pages/NotFound';
 import { Route, Routes } from 'react-router';
 
-export const CustomerLayout = ({ userType, navbarData }) => {
+export const StoreEmployeeLayout = ({ userType, navbarData }) => {
   return (
     <div className='flex flex-row h-screen'>
       <div className='w-fit p-5'>
