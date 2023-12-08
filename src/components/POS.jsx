@@ -194,6 +194,11 @@ const POS = () => {
     return finalTotalValue;
   };
 
+  const paymentHandler = () =>{
+    console.log("Order Confirmed");
+    setLaundryItems([]);
+  }
+
   useEffect(() => {
     const subtotalValue = calculateSubtotal();
     const taxValue = calculateTax(subtotalValue);
@@ -281,7 +286,7 @@ const POS = () => {
             </div>
             <div className="flex flex-row gap-3">
               <button className='text-xl bg-strongRed font-semibold h-fit w-1/3 rounded-xl p-3 hover:bg-weakRed' onClick={clearList}>Clear List</button>
-              <button className='text-xl bg-strongGreen font-semibold h-fit w-2/3 rounded-xl p-3  hover:bg-weakGreen'>Proceed to Payment</button>
+              <button className='text-xl bg-strongGreen font-semibold h-fit w-2/3 rounded-xl p-3  hover:bg-weakGreen' onClick={paymentHandler}>Proceed to Payment</button>
             </div>
           </div>
         </div>
