@@ -201,6 +201,10 @@ const POS = () => {
     console.log("Laundry Items:", laundryItems); // Add this line
   }, [laundryItems]);
   
+  const clearList = () => {
+    setLaundryItems([]);
+  };
+
   const renderClothesTypeRows = () => {
     const rows = [];
     for (let i = 0; i < ClothesType.length; i += 4) {
@@ -261,12 +265,12 @@ const POS = () => {
         <div className="h-fit p-5 bg-screenYellow rounded-3xl flex-shrink-0">
           <div className="flex flex-col">
             <div className="flex flex-col pb-5">
-              <p className='text-2xl font-semibold'>SubTotal: ₱{subtotal}</p>
-              <p className='text-2xl font-semibold'>Tax(12%): ₱{tax}</p>
-              <p className='text-2xl font-semibold'>Final Total: ₱{finalTotal}</p>
+              <p className='text-2xl font-semibold text-right'>SubTotal: ₱{subtotal}</p>
+              <p className='text-2xl font-semibold text-right'>Tax(12%): ₱{tax}</p>
+              <p className='text-2xl font-semibold text-right'>Final Total: ₱{finalTotal}</p>
             </div>
             <div className="flex flex-row gap-3">
-              <button className='text-xl bg-strongRed font-semibold h-fit w-1/3 rounded-xl p-3 hover:bg-weakRed'>Clear List</button>
+              <button className='text-xl bg-strongRed font-semibold h-fit w-1/3 rounded-xl p-3 hover:bg-weakRed' onClick={clearList}>Clear List</button>
               <button className='text-xl bg-strongGreen font-semibold h-fit w-2/3 rounded-xl p-3  hover:bg-weakGreen'>Proceed to Payment</button>
             </div>
           </div>
