@@ -70,7 +70,7 @@ const App = () => {
  <Routes>
 
 
- 
+ <Route exact path='/' Component={Login}/>
   <Route exact path='/pos' Component={PosPage}/>
 
   </Routes>
@@ -83,7 +83,7 @@ const App = () => {
         <Dashboard userType={ userType }/>
       </div> } */}
       {/* <SignUp/>  */}
-       <Login/> 
+       {/* <Login/>  */}
     </div>
   )
 }
