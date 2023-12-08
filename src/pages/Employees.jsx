@@ -100,10 +100,11 @@ const Employees = () => {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
+      <div className="w-full h-full flex flex-col px-8 p-3 bg-brightYellow rounded-b-3xl gap-3"> 
       <Button // ngano mani huhu di ma tarong ang styling
           onClick={handleAddNewEmployee}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
+          // ambot
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"> 
           Add New Employee
         </Button>
         <div className="bg-screenYellow rounded-3xl w-full p-4 pl-5 h-full">
