@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function ServiceModal({ laundryType, closeModal, addLaundryItem  }) {
+export default function ServiceModal({ laundryType, closeModal, addLaundryItem, priceList   }) {
 
   const [serviceType, setServiceType] = useState('');
   const [washingOption, setWashingOption] = useState('');
@@ -21,21 +21,33 @@ export default function ServiceModal({ laundryType, closeModal, addLaundryItem  
   };
 
   const handleConfirm = () => {
-    console.log(laundryType);
     if (!serviceType || !laundryType) {
-      // If not selected, you can display an alert or take other actions to notify the user
       alert("Please select a service type before confirming.");
       return;
-    }else{
-      const laundryItem = {
-        type: laundryType,
-        service: washingOption || serviceType, // Use washing option if available, otherwise use service type
-        quantity: quantity,
-      };
-      addLaundryItem(laundryItem);
     }
+  
+    const selectedService = washingOption || serviceType;
+    const price = priceList[laundryType][selectedService];
+  
+    if (isNaN(price)) {
+      // Handle the case where the selected service is not available for the given cloth type
+      alert(`Invalid service: ${selectedService} for ${laundryType}`);
+      return;
+    }
+  
+    const total = price * quantity;
+  
+    const laundryItem = {
+      type: laundryType,
+      service: selectedService,
+      quantity: quantity,
+      total: total,
+    };
+  
+    addLaundryItem(laundryItem);
     closeModal(false);
-  }
+  };
+  
 
   const handleQuantityChange = (event) => {
     let value = event.target.value;

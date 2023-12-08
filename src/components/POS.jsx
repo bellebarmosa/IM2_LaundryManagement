@@ -221,7 +221,8 @@ const POS = () => {
                 <p className="text-lg font-semibold text-center pt-0 pb-2">{item.clothType}</p>
               </div>
               {showModal && (
-                <ServiceModal laundryType={laundryType} closeModal={setShowModal} addLaundryItem={addLaundryItems}></ServiceModal>
+                <ServiceModal laundryType={laundryType} closeModal={setShowModal} addLaundryItem={addLaundryItems} 
+                priceList={PriceList}></ServiceModal>
               )}
             </div>
           ))}
@@ -240,34 +241,43 @@ const POS = () => {
       
       <div className="flex flex-col gap-5 bg-lightBlue rounded-3xl w-2/5 p-4 pl-5">
         <div className="h-3/5 bg-screenYellow rounded-2xl p-4 flex-grow">
-          <p className="text-3xl font-bold pb-5">Laundry List</p>
-          <table className="text-left w-full text-lg h-max">
-            <thead>
-              <tr className="flex flex-row">
-                <th className="text-xl font-bold w-1/5">Type</th>
-                <th className="text-xl font-bold w-2/5">Service</th>
-                <th className="text-xl font-bold w-1/5">Quantity</th>
+        <p className="text-3xl font-bold pb-5">Laundry List</p>
+        <table className="text-left w-full text-lg h-max">
+          <thead>
+            <tr className="flex flex-row">
+              <th className="text-xl font-bold w-1/6">Type</th>
+              <th className="text-xl font-bold w-2/6 text-right">Service</th>
+              <th className="text-xl font-bold w-1/6 text-right">Items</th>
+              <th className="text-xl font-bold w-1/6 text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {laundryItems.map((item, index) => (
+              <tr key={index} className="flex flex-row pt-5">
+                <td className="text-xl font-semibold w-1/6">{item.type}</td>
+                <td className="text-xl font-semibold w-2/6 pr-2 text-right">{item.service}</td>
+                <td className="text-xl font-semibold w-1/6 text-center">{item.quantity}</td>
+                <td className="text-xl font-semibold w-1/6 text-right">₱{item.total}</td> 
+                <td className='pl-4'>
+                  <button
+                    className='text-lg bg-red-700  text-brightYellow font-semibold h-fit w-fit rounded-2xl px-2'
+                    onClick={() => handleDelete(index)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {laundryItems.map((item, index) => (
-                <tr key={index} className="flex flex-row pt-5">
-                  <td className="text-xl font-semibold w-1/5">{item.type}</td>
-                  <td className="text-xl font-semibold w-2/5 pr-2">{item.service}</td>
-                  <td className="text-xl font-semibold w-1/5 text-center">{item.quantity}</td>
-                  <td><button className='text-lg bg-red-700  text-brightYellow font-semibold h-fit w-fit rounded-2xl px-2' onClick={() => handleDelete(index)}>Delete</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </tbody>
+        </table>
         </div>
 
         <div className="h-fit p-5 bg-screenYellow rounded-3xl flex-shrink-0">
           <div className="flex flex-col">
             <div className="flex flex-col pb-5">
-              <p className='text-2xl font-semibold text-right'>SubTotal: ₱{subtotal}</p>
-              <p className='text-2xl font-semibold text-right'>Tax(12%): ₱{tax}</p>
-              <p className='text-2xl font-semibold text-right'>Final Total: ₱{finalTotal}</p>
+            <p className='text-2xl font-semibold text-right'>SubTotal: ₱{subtotal.toFixed(2)}</p>
+            <p className='text-2xl font-semibold text-right'>Tax(12%): ₱{tax.toFixed(2)}</p>
+            <p className='text-2xl font-semibold text-right'>Final Total: ₱{finalTotal.toFixed(2)}</p>
             </div>
             <div className="flex flex-row gap-3">
               <button className='text-xl bg-strongRed font-semibold h-fit w-1/3 rounded-xl p-3 hover:bg-weakRed' onClick={clearList}>Clear List</button>
