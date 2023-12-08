@@ -20,6 +20,52 @@ const Icon = ({svgName}) => {
   )
 }
 
+// const ClothesType = [
+//   {
+//     clothType: "Whites",
+//     icon: <Icon svgName={svgWhites}/>
+//   },
+//   {
+//     clothType: "Colored",
+//     icon: <Icon svgName={svgColored}/>
+//   },
+//   {
+//     clothType: "Delicates",
+//     icon: <Icon svgName={svgDelicates}/>
+//   },
+//   {
+//     clothType: "Denim",
+//     icon: <Icon svgName={svgDenim}/>
+//   },
+//   {
+//     clothType: "Athletic",
+//     icon: <Icon svgName={svgAthleticWear}/>
+//   },
+//   {
+//     clothType: "Outwear",
+//     icon: <Icon svgName={svgOutwear}/>
+//   },
+//   {
+//     clothType: "Linens",
+//     icon: <Icon svgName={svgBedLinens}/>
+//   },
+//   {
+//     clothType: "Towels",
+//     icon: <Icon svgName={svgTowels}/>
+//   },
+//   {
+//     clothType: "Curtains",
+//     icon: <Icon svgName={svgCurtains}/>
+//   },
+//   {
+//     clothType: "Rags",
+//     icon: <Icon svgName={svgRags}/>
+//   },
+//   {
+//     clothType: "Suits",
+//     icon: <Icon svgName={svgSuits}/>
+//   }
+// ]
 
 const PriceList = {
   Whites: {
@@ -111,23 +157,68 @@ const POS = () => {
   const [subtotal, setSubtotal] = useState(0);
   const [tax, setTax] = useState(0);
   const [finalTotal, setFinalTotal] = useState(0);
-
   const [ClothesType,setClothesType] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const [selectedPickupDate, setSelectedPickupDate] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await Axios.get('http://localhost:3001/order/clothetype');
-        setClothesType(response.data);
-        console.log(ClothesType);
+        const customSvgMappings = {
+          Whites: svgWhites,
+          Colored: svgColored,
+          Delicates: svgDelicates,
+          Denim: svgDenim,
+          Athletic: svgAthleticWear,
+          Outwear: svgOutwear,
+          Linens: svgBedLinens,
+          Towels: svgTowels,
+          Curtains: svgCurtains,
+          Rags: svgRags,
+          Suits: svgSuits,
+          // Add more as needed
+        };
+
+        // Define mapBackendDataToClothesType here
+        const mapBackendDataToClothesType = (backendData, svgMappings) => {
+          return backendData.map((item) => ({
+            clotheType_ID: item.clotheType_ID,
+            name: item.name,
+            svgName: svgMappings[item.name],
+          }));
+        };
+
+        // Use the mapBackendDataToClothesType function with the received data and custom SVG mappings
+        setClothesType(mapBackendDataToClothesType(response.data, customSvgMappings));
       } catch (error) {
         console.error(error);
         // Handle errors here, e.g., setClothesType(null);
       }
+      
     };
-  
+    console.log(ClothesType)
     fetchData();
   }, []);
+
+
+  useEffect(() => {
+    // Fetch customer states from your backend or use dummy data
+    const fetchCustomerStates = async () => {
+      try {
+        // Fetch customer states from your backend endpoint
+        const response = await Axios.get('http://localhost:3001/order/customers');
+        setCustomers(response.data);
+      } catch (error) {
+        console.error('Error fetching customer states:', error);
+        // Handle errors here
+      }
+    };
+    // Call the function to fetch customer states
+    fetchCustomerStates();
+  }, []);
+
 
 
   const addLaundryItems = (items) => {
@@ -168,7 +259,21 @@ const POS = () => {
   };
 
   const paymentHandler = () =>{
-    console.log("Order Confirmed");
+    // console.log("Order Confirmed");
+    //   Axios.post("http://localhost:3001/order/addOrder", { 
+    //     newOrder:serviceCart,
+    //     customer: selectedCus,
+    //     employee: user,
+    //     total: total,
+    //     order_pickUP: pickUpDate,
+    //     order_paidAmount: paidAmount })
+    //   .then((response)=>{
+    //     console.log(response);
+    //   })
+    console.log(selectedCustomer)
+    console.log(selectedPickupDate)
+
+
     setLaundryItems([]);
   }
 
@@ -191,11 +296,12 @@ const POS = () => {
         <div key={i} className="flex flex-row gap-12 p-4">
           {rowItems.map((item) => (
             <div
-              key={item.clotheType_ID} // Use a unique key, like clotheType_ID
+              key={item.clotheType_ID}
               className="rounded-2xl w-1/5 h-full bg-darkBlue hover:bg-lightBlue select-none flex flex-col items-center p-4"
             >
               <div className="pt-1" onClick={() => handleOptionClick(item.name)}>
-                {item.icon}
+                {/* Render the SVG here */}
+                <img src={item.svgName} alt={item.name} style={{ width: '150px', height: '150px', borderRadius: '1rem' }} />
                 <p className="text-lg font-semibold text-center pt-0 pb-2">{item.name}</p>
               </div>
               {showModal && (
@@ -214,16 +320,52 @@ const POS = () => {
     }
     return rows;
   };
-
   return (
     <div className="w-full h-full flex flex-row px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
-      <div className="bg-screenYellow rounded-3xl w-3/5 p-4 pl-5">
-        {ClothesType && renderClothesTypeRows()}
-      </div>
+    <div className="bg-screenYellow rounded-3xl w-3/5 p-4 pl-5">
+    
+
+      {ClothesType && renderClothesTypeRows()}
+    </div>
       
       <div className="flex flex-col gap-5 bg-lightBlue rounded-3xl w-2/5 p-4 pl-5">
         <div className="h-3/5 bg-screenYellow rounded-2xl p-4 flex-grow">
         <p className="text-3xl font-bold pb-5">Laundry List</p>
+
+         {/* Date picker for selecting pickup date */}
+          <div className="mb-3">
+          <label className="block text-xl font-bold mb-1" htmlFor="pickupDateInput">
+            Select Pickup Date:
+          </label>
+          <input
+            type="date"
+            id="pickupDateInput"
+            className="w-full h-10 px-4 border rounded-md bg-white focus:outline-none focus:border-blue-500"
+            value={selectedPickupDate}
+            onChange={(e) => setSelectedPickupDate(e.target.value)}
+          />
+
+            {/* Dropdown for selecting customer state */}
+      <div className="mb-3">
+  <label className="block text-xl font-bold mb-1" htmlFor="customerStateDropdown">
+    Select Customer State:
+  </label>
+  <select
+    id="customerStateDropdown"
+    className="w-full h-10 px-4 border rounded-md bg-white focus:outline-none focus:border-blue-500"
+    value={selectedCustomer}
+    onChange={(e) => setSelectedCustomer(e.target.value)}
+  >
+    <option value="">Select...</option>
+    {customers.map((customer) => (
+      <option key={customer.customer_ID} value={customer.customer_name}>
+        {customer.customer_name}
+      </option>
+    ))}
+  </select>
+</div>
+
+        </div>
         <table className="text-left w-full text-lg h-max">
           <thead>
             <tr className="flex flex-row">
