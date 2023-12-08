@@ -1,5 +1,5 @@
 import React from 'react'
-import Logo from '../assets/iWashify.png'
+import Logo from '../iWashify.png'
 
 const Login = () => {
   return (

@@ -1,4 +1,10 @@
 import React from 'react'
+import { useState,useEffect } from 'react';
+import Axios from 'axios';
+import TotalOrdersComponent from '../admin-dashboard/TotalOrders';
+import TotalSalesComponent from '../admin-dashboard/TotalSales';
+import TotalServicesComponent from '../admin-dashboard/TotalServices';
+import TotalCustomersComponent from '../admin-dashboard/TotalCustomers';
 
 import {  BadgeDollarSign, ShoppingBag, Wrench, UsersRound, CircleUserRound, LayoutList, ListChecks  } from 'lucide-react';
 
@@ -13,92 +19,122 @@ const CustomIcon = ({ size = 50, color = "#448DB8" }) => {
 };
 
 const DefaultDashboard = () => {
-  const totalSales = 5000;
-  const totalOrders = 32;
-  const totalServices = 10;
-  const totalCustomers = 18;
+  const totalSales = <TotalSalesComponent/>;
+  const totalOrders = <TotalOrdersComponent/>;
+  const totalServices = <TotalServicesComponent/>;
+  const totalCustomers = <TotalCustomersComponent/>;
+
+  const [orders, setOrders] = useState([]);
+  const [recentOrders, setrecentOrders] = useState([]);
+  const [customers, setCustomers] = useState([]);
+
+useEffect(() => {
+  // fetch orders from the backend //first 10
+  Axios.get('http://localhost:3001/order/pendingorders')
+    .then((response) => {
+      if (response.err) {
+        console.log(response.err);
+        setrecentOrders(null)
+      } else {
+        setOrders(response.data);
+      }
+      console.log(orders)
+    });
+}, []);
+
+// useEffect(() => {
+//   Axios.get("http://localhost:3001/order/customers")
+//     .then((response) => {
+//       if (response.err) {
+//         console.log(response.err);
+//       } else {
+//         setCustomers(response.data);
+//         console.log(customers)
+//       }
+//     });
+// }, []);
 
 
-  const PendingOrders = [
-    {
-      profile: <CustomIcon/>,
-      name: "Hugh Mongous",
-      email: "test1@email.com",
-      totalAmount: 5000
-    },
-    {
-      profile: <CustomIcon/>,
-      name: "Hugh Mongous",
-      email: "test1@email.com",
-      totalAmount: 5000
-    },
-    {
-      profile: <CustomIcon/>,
-      name: "Hugh Mongous",
-      email: "test1@email.com",
-      totalAmount: 5000
-    },
-    {
-      profile:  <CustomIcon/>,
-      name: "Small Mongous",
-      email: "test2@email.com",
-      totalAmount: 500
-    },
-    {
-      profile:  <CustomIcon/>,
-      name: "Medium Mongous",
-      email: "test2@email.com",
-      totalAmount: 50
-    },
-    {
-      profile:  <CustomIcon/>,
-      name: "Big Mongous",
-      email: "test3@email.com",
-      totalAmount: 5
-    }
-  ]
+  // const PendingOrders = [
+  //   {
+  //     profile: <CustomIcon/>,
+  //     name: "Hugh Mongous",
+  //     email: "test1@email.com",
+  //     totalAmount: 5000
+  //   },
+  //   {
+  //     profile: <CustomIcon/>,
+  //     name: "Hugh Mongous",
+  //     email: "test1@email.com",
+  //     totalAmount: 5000
+  //   },
+  //   {
+  //     profile: <CustomIcon/>,
+  //     name: "Hugh Mongous",
+  //     email: "test1@email.com",
+  //     totalAmount: 5000
+  //   },
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Small Mongous",
+  //     email: "test2@email.com",
+  //     totalAmount: 500
+  //   },
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Medium Mongous",
+  //     email: "test2@email.com",
+  //     totalAmount: 50
+  //   },
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Big Mongous",
+  //     email: "test3@email.com",
+  //     totalAmount: 5
+  //   }
+  // ]
 
-  const RecentOrders = [
-    {
-      profile:  <CustomIcon/>,
-      name: "Hugh Mongous",
-      email: "test1@email.com",
-      totalAmount: 5000
-    },
-    {
-      profile:  <CustomIcon/>,
-      name: "Hugh Mongous",
-      email: "test1@email.com",
-      totalAmount: 5000
-    },
-    {
-      profile:  <CustomIcon/>,
-      name: "Hugh Mongous",
-      email: "test1@email.com",
-      totalAmount: 5000
-    },
-    {
-      profile:  <CustomIcon/>,
-      name: "Small Mongous",
-      email: "test2@email.com",
-      totalAmount: 500
-    },
-    {
-      profile:  <CustomIcon/>,
-      name: "Medium Mongous",
-      email: "test2@email.com",
-      totalAmount: 50
-    },
-    {
-      profile:  <CustomIcon/>,
-      name: "Big Mongous",
-      email: "test3@email.com",
-      totalAmount: 5
-    }
-  ]
+  // const RecentOrders = [
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Hugh Mongous",
+  //     email: "test1@email.com",
+  //     totalAmount: 5000
+  //   },
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Hugh Mongous",
+  //     email: "test1@email.com",
+  //     totalAmount: 5000
+  //   },
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Hugh Mongous",
+  //     email: "test1@email.com",
+  //     totalAmount: 5000
+  //   },
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Small Mongous",
+  //     email: "test2@email.com",
+  //     totalAmount: 500
+  //   },
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Medium Mongous",
+  //     email: "test2@email.com",
+  //     totalAmount: 50
+  //   },
+  //   {
+  //     profile:  <CustomIcon/>,
+  //     name: "Big Mongous",
+  //     email: "test3@email.com",
+  //     totalAmount: 5
+  //   }
+  // ]
 
-  const pendingOrdersTotal = PendingOrders.length;
-  const recentOrdersTotal = RecentOrders.length;
+  const pendingOrdersTotal = orders.length;
+  const recentOrdersTotal = recentOrders.length;
 
 
   return (
@@ -158,7 +194,7 @@ const DefaultDashboard = () => {
             </div>
           </div>
             <div className="overflow-auto max-h-80 custom-scrollbar">
-              {PendingOrders.map(( val, key) => {
+              {orders && orders.map(( val, key) => {
                 return <div key={ key }  className="flex flex-row items-center pb-3">
                   { val.profile }
                   <div className="flex flex-col w-1/2 pl-5">
@@ -179,7 +215,7 @@ const DefaultDashboard = () => {
             </div>
           </div>
             <div className="overflow-auto max-h-80 custom-scrollbar">
-              {RecentOrders.map(( val, key) => {
+              {recentOrders && recentOrders.map(( val, key) => {
                 return <div key={ key }  className="flex flex-row items-center pb-3">
                   { val.profile }
                   <div className="flex flex-col w-1/2 pl-5">

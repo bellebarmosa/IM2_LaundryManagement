@@ -1,9 +1,12 @@
 import React from 'react'
-
+import Orders from '../pages/Orders';
+import Services from '../pages/Services';
 import Navbar from '../Navbar'
 import Sidebar from '../Sidebar'
 import Dashboard from '../pages/Dashboard';
 import POS from '../pages/POS';
+import StoreOwnerSettingsData from '../pages/settings/StoreOwnerSettingsData'
+import Employees from '../pages/Employees';
 import { NotFound } from '../pages/NotFound';
 import { Route, Routes } from 'react-router';
 
@@ -18,11 +21,11 @@ export const StoreOwnerLayout = ({ userType, navbarData }) => {
         <Routes>
           <Route path="/dashboard" element={<Dashboard userType={ userType } />}/>
           <Route path="/pos" element={<POS/>}/>
-          <Route path="/order" element={<POS/>}/>
-          <Route path="/services" element={<POS/>}/>
+          <Route path="/order" element={<Orders/>}/>
+          <Route path="/services" element={<Services/>}/>
           <Route path="/analytics" element={<POS/>}/>
-          <Route path="/employees" element={<POS/>}/>
-          <Route path="/settings" element={<POS/>}/>
+          <Route path="/employee" element={<Employees/>}/>
+          <Route path="/settings" element={<StoreOwnerSettingsData/>}/>
           <Route path="*" element={<NotFound/>}/>
         </Routes>
       </div>

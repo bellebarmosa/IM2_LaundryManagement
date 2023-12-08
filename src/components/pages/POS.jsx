@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import Axios from 'axios';
 import ServiceModal from '../modals/ServiceModal'
 
 import svgWhites from '../../assets/whites.png'
@@ -22,52 +22,52 @@ const Icon = ({svgName}) => {
 }
 
 
-const ClothesType = [
-  {
-    clothType: "Whites",
-    icon: <Icon svgName={svgWhites}/>
-  },
-  {
-    clothType: "Colored",
-    icon: <Icon svgName={svgColored}/>
-  },
-  {
-    clothType: "Delicates",
-    icon: <Icon svgName={svgDelicates}/>
-  },
-  {
-    clothType: "Denim",
-    icon: <Icon svgName={svgDenim}/>
-  },
-  {
-    clothType: "Athletic",
-    icon: <Icon svgName={svgAthleticWear}/>
-  },
-  {
-    clothType: "Outwear",
-    icon: <Icon svgName={svgOutwear}/>
-  },
-  {
-    clothType: "Linens",
-    icon: <Icon svgName={svgBedLinens}/>
-  },
-  {
-    clothType: "Towels",
-    icon: <Icon svgName={svgTowels}/>
-  },
-  {
-    clothType: "Curtains",
-    icon: <Icon svgName={svgCurtains}/>
-  },
-  {
-    clothType: "Rags",
-    icon: <Icon svgName={svgRags}/>
-  },
-  {
-    clothType: "Suits",
-    icon: <Icon svgName={svgSuits}/>
-  }
-]
+// const ClothesType = [
+//   {
+//     clothType: "Whites",
+//     icon: <Icon svgName={svgWhites}/>
+//   },
+//   {
+//     clothType: "Colored",
+//     icon: <Icon svgName={svgColored}/>
+//   },
+//   {
+//     clothType: "Delicates",
+//     icon: <Icon svgName={svgDelicates}/>
+//   },
+//   {
+//     clothType: "Denim",
+//     icon: <Icon svgName={svgDenim}/>
+//   },
+//   {
+//     clothType: "Athletic",
+//     icon: <Icon svgName={svgAthleticWear}/>
+//   },
+//   {
+//     clothType: "Outwear",
+//     icon: <Icon svgName={svgOutwear}/>
+//   },
+//   {
+//     clothType: "Linens",
+//     icon: <Icon svgName={svgBedLinens}/>
+//   },
+//   {
+//     clothType: "Towels",
+//     icon: <Icon svgName={svgTowels}/>
+//   },
+//   {
+//     clothType: "Curtains",
+//     icon: <Icon svgName={svgCurtains}/>
+//   },
+//   {
+//     clothType: "Rags",
+//     icon: <Icon svgName={svgRags}/>
+//   },
+//   {
+//     clothType: "Suits",
+//     icon: <Icon svgName={svgSuits}/>
+//   }
+// ]
 
 const PriceList = {
   Whites: {
@@ -160,6 +160,57 @@ const POS = () => {
   const [tax, setTax] = useState(0);
   const [finalTotal, setFinalTotal] = useState(0);
 
+  const [ClothesType,setClothesType] = useState([]);
+
+useEffect(()=>{
+  Axios.get('http://localhost:3001/order/clothetype')
+  .then((response)=>{
+    if (response.err) {
+      console.log(response.err);
+    } else {
+      setClothesType(response.data);
+      console.log(ClothesType)
+    }
+    console.log(ClothesType)
+  })
+},[])
+
+const getIconByName = (clotheType) => {
+  switch (clotheType) {
+    case 'Whites':
+      return svgWhites;
+    case 'Colored':
+      return svgColored;
+    case 'Delicates':
+      return svgDelicates;
+    case 'Denim':
+      return svgDenim;
+    case 'Athletic':
+      return svgAthleticWear;
+    case 'Outwear':
+      return svgOutwear;
+    case 'Linens':
+      return svgBedLinens;
+    case 'Towels':
+      return svgTowels;
+    case 'Curtains':
+      return svgCurtains;
+    case 'Rags':
+      return svgRags;
+    case 'Suits':
+      return svgSuits;
+    default:
+      return null; // You can provide a default icon or handle missing icons
+  }
+};
+
+const clothesWithTypeAndIcon = ClothesType.map((item) => ({
+  ...item,
+  icon: getIconByName(item.name)
+}));
+
+
+
   const addLaundryItems = (items) => {
     setLaundryItems([...laundryItems, items]);
   };
@@ -213,32 +264,21 @@ const POS = () => {
     setLaundryItems([]);
   };
 
+  
+
+
   const renderClothesTypeRows = () => {
-    const rows = [];
-    for (let i = 0; i < ClothesType.length; i += 4) {
-      const rowItems = ClothesType.slice(i, i + 4);
-      const row = (
-        <div key={i} className="flex flex-row gap-12 p-4">
-          {rowItems.map((item) => (
-            <div
-              key={item.clothType}
-              className="rounded-2xl w-1/5 h-full bg-darkBlue hover:bg-lightBlue select-none flex flex-col items-center p-4"
-            >
-              <div className="pt-1" onClick={() => handleOptionClick(item.clothType)}>
-                {item.icon}
-                <p className="text-lg font-semibold text-center pt-0 pb-2">{item.clothType}</p>
-              </div>
-              {showModal && (
-                <ServiceModal laundryType={laundryType} closeModal={setShowModal} addLaundryItem={addLaundryItems} 
-                priceList={PriceList}></ServiceModal>
-              )}
-            </div>
-          ))}
+    return clothesWithTypeAndIcon.map((item) => (
+      <div key={item.clotheType} className="rounded-2xl w-1/5 h-full bg-darkBlue hover:bg-lightBlue select-none flex flex-col items-center p-4">
+        <div className="pt-1" onClick={() => handleOptionClick(item.clotheType)}>
+          <Icon svgName={getIconByName(item.clotheType)} />
+          <p className="text-lg font-semibold text-center pt-0 pb-2">{item.clotheType}</p>
         </div>
-      );
-      rows.push(row);
-    }
-    return rows;
+        {showModal && (
+          <ServiceModal laundryType={item.clotheType} closeModal={setShowModal} addLaundryItem={addLaundryItems} priceList={PriceList}></ServiceModal>
+        )}
+      </div>
+    ));
   };
 
   return (
@@ -260,22 +300,22 @@ const POS = () => {
             </tr>
           </thead>
           <tbody>
-            {laundryItems.map((item, index) => (
-              <tr key={index} className="flex flex-row pt-5">
-                <td className="text-xl font-semibold w-1/6">{item.type}</td>
-                <td className="text-xl font-semibold w-2/6 pr-2 text-right">{item.service}</td>
-                <td className="text-xl font-semibold w-1/6 text-center">{item.quantity}</td>
-                <td className="text-xl font-semibold w-1/6 text-right">₱{item.total}</td> 
-                <td className='pl-4'>
-                  <button
-                    className='text-lg bg-red-700  text-brightYellow font-semibold h-fit w-fit rounded-2xl px-2'
-                    onClick={() => handleDelete(index)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+          {laundryItems.map((item) => (
+ <tr key={item.id} className="flex flex-row pt-5">
+   <td className="text-xl font-semibold w-1/6">{item.type}</td>
+   <td className="text-xl font-semibold w-2/6 pr-2 text-right">{item.service}</td>
+   <td className="text-xl font-semibold w-1/6 text-center">{item.quantity}</td>
+   <td className="text-xl font-semibold w-1/6 text-right">₱{item.total}</td> 
+   <td className='pl-4'>
+     <button
+       className='text-lg bg-red-700 text-brightYellow font-semibold h-fit w-fit rounded-2xl px-2'
+       onClick={() => handleDelete(item.id)}
+     >
+       Delete
+     </button>
+   </td>
+ </tr>
+))}
           </tbody>
         </table>
         </div>

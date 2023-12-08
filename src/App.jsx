@@ -1,13 +1,41 @@
-import React, { useState } from 'react'
-
+import React, { useState,useEffect } from 'react'
+import Login from './components/pages/Login'
+import Axios from 'axios';
 import { AdminLayout } from './components/layouts/AdminLayout';
 import {CustomerLayout} from './components/layouts/CustomerLayout';
 import {StoreEmployeeLayout} from './components/layouts/StoreEmployeeLayout';
 import {StoreOwnerLayout} from './components/layouts/StoreOwnerLayout';
 
 const App = () => {
-  const [userType, setUserType] = useState('admin');
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [userType, setUserType] = useState('');
+  const [loggedIn, setLoggedIn] = useState();
+  const [navbarData, setnavbarData] = useState({});
+
+  Axios.defaults.withCredentials = true;
+  useEffect(() => {
+  
+    const checkToken = async () => {
+      try {
+        // 
+        const response = await Axios.get('http://localhost:3001/user/profile', { withCredentials: true });
+        if (response.data.user) {
+          // Token exists, set user type and navbar data
+          setUserType(response.data.user.employee_role);
+          setnavbarData([
+            {
+              currentPage: 'Dashboard', //idk onsa dri??
+              name: response.data.user.employee_name,
+              email: response.data.user.employee_eMail,
+            },
+          ]);
+        }
+        console.log(response.data.user)
+      } catch (error) {
+        console.error('Token check error:', error);
+      }
+    };
+    checkToken();
+   }, []);
 
   
 
@@ -22,11 +50,11 @@ const App = () => {
   const handleLogin = (userType) => {
     setUserType(userType);
   };
-  const navbarData = [{ 
-    currentPage: 'Dashboard', 
-    name: 'storeOwner', 
-    email: 'admin@usc.edu.ph'   
-  }]//BACKEND CHANGE ME
+  // setnavbarData[{ 
+  //   currentPage: 'Dashboard', 
+  //   name: 'storeOwner', 
+  //   email: 'admin@usc.edu.ph'   
+  // }]//BACKEND CHANGE ME
 
   const renderLayout = () => {
     switch (userType) {
@@ -45,6 +73,7 @@ const App = () => {
 
   return (
     <>
+   
       {renderLayout()}
     </>
   )
