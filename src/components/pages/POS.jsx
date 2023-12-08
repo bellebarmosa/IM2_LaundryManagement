@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import ServiceModal from '../modals/ServiceModal'
-
 import svgWhites from '../../assets/whites.png'
 import svgColored from '../../assets/colored.png'
 import svgDelicates from '../../assets/delicates.png'
@@ -21,53 +20,6 @@ const Icon = ({svgName}) => {
   )
 }
 
-
-// const ClothesType = [
-//   {
-//     clothType: "Whites",
-//     icon: <Icon svgName={svgWhites}/>
-//   },
-//   {
-//     clothType: "Colored",
-//     icon: <Icon svgName={svgColored}/>
-//   },
-//   {
-//     clothType: "Delicates",
-//     icon: <Icon svgName={svgDelicates}/>
-//   },
-//   {
-//     clothType: "Denim",
-//     icon: <Icon svgName={svgDenim}/>
-//   },
-//   {
-//     clothType: "Athletic",
-//     icon: <Icon svgName={svgAthleticWear}/>
-//   },
-//   {
-//     clothType: "Outwear",
-//     icon: <Icon svgName={svgOutwear}/>
-//   },
-//   {
-//     clothType: "Linens",
-//     icon: <Icon svgName={svgBedLinens}/>
-//   },
-//   {
-//     clothType: "Towels",
-//     icon: <Icon svgName={svgTowels}/>
-//   },
-//   {
-//     clothType: "Curtains",
-//     icon: <Icon svgName={svgCurtains}/>
-//   },
-//   {
-//     clothType: "Rags",
-//     icon: <Icon svgName={svgRags}/>
-//   },
-//   {
-//     clothType: "Suits",
-//     icon: <Icon svgName={svgSuits}/>
-//   }
-// ]
 
 const PriceList = {
   Whites: {
@@ -162,18 +114,20 @@ const POS = () => {
 
   const [ClothesType,setClothesType] = useState([]);
 
-useEffect(()=>{
-  Axios.get('http://localhost:3001/order/clothetype')
-  .then((response)=>{
-    if (response.err) {
-      console.log(response.err);
-    } else {
-      setClothesType(response.data);
-      console.log(ClothesType)
-    }
-    console.log(ClothesType)
-  })
-},[])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await Axios.get('http://localhost:3001/order/clothetype');
+        setClothesType(response.data);
+        console.log(ClothesType);
+      } catch (error) {
+        console.error(error);
+        // Handle errors here, e.g., setClothesType(null);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
 
   const addLaundryItems = (items) => {
@@ -228,27 +182,43 @@ useEffect(()=>{
   const clearList = () => {
     setLaundryItems([]);
   };
-  
-
 
   const renderClothesTypeRows = () => {
-    return ClothesType.map((item) => (
-      <div key={item.clotheType} className="rounded-2xl w-1/5 h-full bg-darkBlue hover:bg-lightBlue select-none flex flex-col items-center p-4">
-        <div className="pt-1" onClick={() => handleOptionClick(item.clotheType)}>
-          <Icon svgName={getIconByName(item.clotheType)} />
-          <p className="text-lg font-semibold text-center pt-0 pb-2">{item.clotheType}</p>
+    const rows = [];
+    for (let i = 0; i < ClothesType.length; i += 4) {
+      const rowItems = ClothesType.slice(i, i + 4);
+      const row = (
+        <div key={i} className="flex flex-row gap-12 p-4">
+          {rowItems.map((item) => (
+            <div
+              key={item.clotheType_ID} // Use a unique key, like clotheType_ID
+              className="rounded-2xl w-1/5 h-full bg-darkBlue hover:bg-lightBlue select-none flex flex-col items-center p-4"
+            >
+              <div className="pt-1" onClick={() => handleOptionClick(item.name)}>
+                {item.icon}
+                <p className="text-lg font-semibold text-center pt-0 pb-2">{item.name}</p>
+              </div>
+              {showModal && (
+                <ServiceModal
+                  laundryType={laundryType}
+                  closeModal={setShowModal}
+                  addLaundryItem={addLaundryItems}
+                  priceList={PriceList}
+                ></ServiceModal>
+              )}
+            </div>
+          ))}
         </div>
-        {showModal && (
-          <ServiceModal laundryType={item.clotheType} closeModal={setShowModal} addLaundryItem={addLaundryItems} priceList={PriceList}></ServiceModal>
-        )}
-      </div>
-    ));
+      );
+      rows.push(row);
+    }
+    return rows;
   };
 
   return (
     <div className="w-full h-full flex flex-row px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
       <div className="bg-screenYellow rounded-3xl w-3/5 p-4 pl-5">
-        {renderClothesTypeRows()}
+        {ClothesType && renderClothesTypeRows()}
       </div>
       
       <div className="flex flex-col gap-5 bg-lightBlue rounded-3xl w-2/5 p-4 pl-5">
@@ -302,4 +272,4 @@ useEffect(()=>{
   )
 }
 
-export default POS
+export default POS;

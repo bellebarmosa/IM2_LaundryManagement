@@ -5,8 +5,10 @@ import { AdminLayout } from './components/layouts/AdminLayout';
 import {CustomerLayout} from './components/layouts/CustomerLayout';
 import {StoreEmployeeLayout} from './components/layouts/StoreEmployeeLayout';
 import {StoreOwnerLayout} from './components/layouts/StoreOwnerLayout';
+import { Route, Routes, useNavigate } from 'react-router';
 
 const App = () => {
+  const navigate =useNavigate()
   const [userType, setUserType] = useState('');
   const [loggedIn, setLoggedIn] = useState();
   const [navbarData, setnavbarData] = useState({});
@@ -32,6 +34,8 @@ const App = () => {
         console.log(response.data.user)
       } catch (error) {
         console.error('Token check error:', error);
+        navigate('/')
+
       }
     };
     checkToken();
@@ -67,13 +71,15 @@ const App = () => {
       case 'storeEmployee':
         return <StoreEmployeeLayout userType={userType} navbarData={navbarData}/>;
       default:
-        return null;
+        return <Login/>;
     }
   };
 
   return (
     <>
-   
+        
+    
+    <div className="wrapper"></div>
       {renderLayout()}
     </>
   )

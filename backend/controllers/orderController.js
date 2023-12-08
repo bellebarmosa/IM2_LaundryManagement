@@ -121,18 +121,23 @@ router.post('/services',async (req,res)=>{
 
 
 router.get("/clothetype",async (req, res) => {
+  try{
+    db.queryAsync("SELECT * FROM clothetype", (err, result) => {
+      if (err) {
+          res.send({ err: err });
+      } else {
+          if (result.length > 0) {
+              res.send(result);
+          } else {
+              res.send({ message: "No garments found" });
+          }
+      }
+  });
+
+  }catch(err){
+    res.send({err:err});
+  }
   
-    db.query("SELECT * FROM clothetype", (err, result) => {
-        if (err) {
-            res.send({ err: err });
-        } else {
-            if (result.length > 0) {
-                res.send(result);
-            } else {
-                res.send({ message: "No garments found" });
-            }
-        }
-    });
 });
 
 

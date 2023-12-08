@@ -1,33 +1,82 @@
-import React from 'react'
-import Logo from '../iWashify.png'
+
+import Logo from '../pages/iWashify.png';
+import React, { useState } from 'react';
+import Axios from 'axios';
 
 const Login = () => {
+  // State to manage form input
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+Axios.defaults.withCredentials = true;
+  // State to manage login status and error messages
+  const [loginStatus, setLoginStatus] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  Axios.defaults.withCredentials = true;
+  // Function to handle form submission
+  const handleLogin = async (e) => {
+    try {
+      // Make a request to the server to handle login
+      const response = await Axios.post('http://localhost:3001/user/login', {
+        employee_eMail: email,
+        employee_password: password,
+      });
+      console.log(response.data.token)
+      // Check the response from the server
+      if (response.data.token) {
+        // Login successful
+        setLoginStatus('success');
+        // Redirect or perform any other action you want on successful login
+      } else {
+        // Login failed
+        setLoginStatus('error');
+        setErrorMessage(response.data.message);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setLoginStatus('error');
+      setErrorMessage('Internal Server Error');
+    }
+  };
+
   return (
     <div className="flex items-center justify-center h-screen w-full">
-        <div className='flex flex-col items-center justify-center bg-brightYellow rounded-3xl p-10 w-3/12'>
-          <img src={Logo} className='w-28 rounded-3xl select-none'/>
-          <p className='font-semibold text-darkBlue text-5xl font-alegreya-sans select-none'>iWashify</p>
-          <p className="text-3xl text-center font-semibold text-darkBlue pb-7 pt-6">Login</p>
-          <form>
-            <div className="flex flex-col items-center gap-5">
-
-              <div className="flex flex-col w-full">
-                  <p className="text-base text-darkBlue font-semibold pl-2 select-none">Email Address</p>
-                  <input type="email" className='bg-blue-100 h-9 rounded-xl outline-none pl-2'/>
-              </div>
-
-              <div className="flex flex-col w-full pb-5">
-                  <p className="text-base text-darkBlue font-semibold pl-2 select-none">Password</p>
-                  <input type="text" className='bg-blue-100 h-9 rounded-xl outline-none pl-2'/>
-              </div>
-
-              <button className='h-12 w-1/2 bg-darkBlue rounded-2xl px-7 text-s font-semibold text-brightYellow'>Login</button>
-              <p>Dont have an account? <a>Sign Up</a></p>
+      <div className='flex flex-col items-center justify-center bg-brightYellow rounded-3xl p-10 w-3/12'>
+        <img src={Logo} className='w-28 rounded-3xl select-none' alt="iWashify Logo" />
+        <p className='font-semibold text-darkBlue text-5xl font-alegreya-sans select-none'>iWashify</p>
+        <p className="text-3xl text-center font-semibold text-darkBlue pb-7 pt-6">Login</p>
+        <form onSubmit={handleLogin}>
+          <div className="flex flex-col items-center gap-5">
+            <div className="flex flex-col w-full">
+              <p className="text-base text-darkBlue font-semibold pl-2 select-none">Email Address</p>
+              <input
+                type="email"
+                className='bg-blue-100 h-9 rounded-xl outline-none pl-2'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
-          </form>
-        </div>
+            <div className="flex flex-col w-full pb-5">
+              <p className="text-base text-darkBlue font-semibold pl-2 select-none">Password</p>
+              <input
+                type="password"
+                className='bg-blue-100 h-9 rounded-xl outline-none pl-2'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button className='h-12 w-1/2 bg-darkBlue rounded-2xl px-7 text-s font-semibold text-brightYellow' type="submit">Login</button>
+            {loginStatus === 'error' && (
+              <p className="text-red-500 text-sm">{errorMessage}</p>
+            )}
+            <p>Dont have an account? <a href="/">Sign Up</a></p>
+          </div>
+        </form>
+      </div>
     </div>
-  )
+  );
 }
 
 export default Login
