@@ -1,14 +1,9 @@
 import React, { useState } from 'react'
 
-import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar'
-import SignUp from './pages/SignUp';
-import Login from './pages/Login';
-import Dashboard from './components/pages/Dashboard';
-import POS from './components/pages/POS';
 import { AdminLayout } from './components/layouts/AdminLayout';
-import AppRouter from './components/AppRouter'
-
+import {CustomerLayout} from './components/layouts/CustomerLayout';
+import {StoreEmployeeLayout} from './components/layouts/StoreEmployeeLayout';
+import {StoreOwnerLayout} from './components/layouts/StoreOwnerLayout';
 
 const App = () => {
   const [userType, setUserType] = useState('admin');
