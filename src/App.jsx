@@ -37,11 +37,11 @@ const App = () => {
         {/* <Dashboard userType={ userType }/> */}
         {/* <Settings userType={ userType }/> */}
         {/* <POS/> */}
-        {/* <Analytics/> */}
+        <Analytics/>
         {/* <Employees/> */}
         {/* <Orders/> */}
         {/* <Clothes/> */}
-        <Services/>
+        {/* <Services/> */}
     </div>
       {/* <SignUp/>
       <Login/> */}
