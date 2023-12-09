@@ -300,7 +300,7 @@ const POS = () => {
     Axios.post("http://localhost:3001/order/addOrder", {
       laundry_basket: laundryItems,
       customers: selectedCustomer,
-      employee: user, // Ensure you have the necessary data for the employee
+      employee: user, 
       orderpickup_date: selectedPickupDate,
       order_total: finalTotal,
       paidStatus: details.paidStatus,

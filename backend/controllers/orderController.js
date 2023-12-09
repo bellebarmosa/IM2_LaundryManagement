@@ -7,7 +7,7 @@ const verifyToken = require("../middleware/verifyToken"); // Import the middlewa
 //ADDD VERIFICATIONNNNNNN
 /////////////////////////////////////////////////////////////////////////
 router.get("/services", async(req, res) => {
- 
+  
     db.query("SELECT * FROM services", (err, result) => {
         if (err) {
             res.send({ err: err });
@@ -234,49 +234,76 @@ router.delete('/customers/:customerId', async (req, res) => {
 
 //////////////////////////////////////////////////////TO CHANGE
 router.post("/addOrder", async (req, res) => {
+  const laundry_basket = req.body.laundry_basket;
+  const customers = req.body.customers;
+  const employee = req.body.employee;
+  const orderpickup_date = req.body.orderpickup_date;
+  const order_total = req.body.order_total;
 
- const laundry_basket = req.body.laundry_basket
-  const customers = req.body.customers
-  const employee = req.body.employee
-  const orderpickup_date = req.body.orderpickup_date
-  const order_total = req.body.order_total
+  console.log(laundry_basket);
+  console.log(employee);
+  console.log(orderpickup_date);
+  console.log(order_total);
+  console.log(customers);
 
-  console.log(laundry_basket)
-  console.log(employee)
-  console.log(orderpickup_date)
-  console.log(order_total)
-  console.log(customers)
+  try {
+    let query1 = "INSERT INTO orders(customer_ID, employee_ID, order_status, order_date, orderpickup_date, order_total, payment_status, Remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-  let query1 = "INSERT INTO orders(customer_ID, employee_ID, order_status, order_date, orderpickup_date, order_total, payment_status, emarks) VALUE (?, ?, ?, ? , ? ,? ,? ,?)";
+    const result1 = await db.queryAsync(query1, [
+      customers.customer_ID,
+      employee.employee_ID,
+      "Pending",
+      new Date(),
+      orderpickup_date,
+      order_total,
+      "Unpaid", // Assuming you want to set the payment_status initially as "Unpaid"
+      "No remarks", // You may change this based on your requirements
+    ]);
 
-  db.query(query1, [customers.customer_ID,employee.employee_ID,"Pending",new Date(),orderpickup_date,order_total], (err, result) => {
+    const orderID = result1.insertId;
+
+    console.log(result1);
+
+    let query2 =
+      "INSERT INTO laundrybasket(order_ID, clotheType_ID, serviceType_ID, subTotal, subQuantity) VALUES (?, ?, ?, ?, ?)";
+
+    for (const item of laundry_basket) {
+      const result2 = await db.queryAsync(query2, [
+        orderID,
+        item.clotheType_ID,
+        item.serviceType_ID,
+        item.total,
+        item.quantity,
+      ]);
+      console.log(result2);
+    }
+
+    res.send({ message: "Order added successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ err: err.message });
+  }
+});
+
+
+
+router.get('/orders', async (req, res) => {
+  let query = "SELECT * FROM orders";
+
+  db.query(query, (err, result) => {
     if (err) {
       res.send({ err: err });
     } else {
-      res.send({ message: "Data uploaded successfully" });
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.send({ message: "No orders found" });
+      }
     }
-
+  });
 });
 
-})
- 
 
-
-router.get ('/orders', async (req,res)=>{
-  let query = "SELECT * FROM orders"
-
-  db.query(query,(err,result) => {
-    if (err) {
-        res.send({ err: err });
-    } else {
-        if (result.length > 0) {
-            res.send(result);
-        } else {
-            res.send({ message: "No orders found" });
-        }
-    }
-});
-});
 
 router.get('/pendingorders', async (req, res) => {
   try {

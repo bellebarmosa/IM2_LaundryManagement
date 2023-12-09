@@ -15,20 +15,25 @@ Axios.defaults.withCredentials = true;
   Axios.defaults.withCredentials = true;
   // Function to handle form submission
   const handleLogin = async (e) => {
+    e.preventDefault();
     try {
-      // Make a request to the server to handle login
       const response = await Axios.post('http://localhost:3001/user/login', {
         employee_eMail: email,
         employee_password: password,
       });
-      console.log(response.data.token)
-      // Check the response from the server
       if (response.data.token) {
-        // Login successful
-        setLoginStatus('success');
-        // Redirect or perform any other action you want on successful login
+        console.log('response.data.token');
+        Axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        setUserType(response.data.user.employee_role);
+        setnavbarData([
+          {
+            currentPage: 'Dashboard',
+            name: response.data.user.employee_name,
+            email: response.data.user.employee_eMail,
+          },
+        ]);
       } else {
-        // Login failed
+        console.log('i went not here');
         setLoginStatus('error');
         setErrorMessage(response.data.message);
       }
@@ -38,6 +43,7 @@ Axios.defaults.withCredentials = true;
       setErrorMessage('Internal Server Error');
     }
   };
+
 
   return (
     <div className="flex items-center justify-center h-screen w-full">
