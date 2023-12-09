@@ -234,9 +234,32 @@ router.delete('/customers/:customerId', async (req, res) => {
 
 //////////////////////////////////////////////////////TO CHANGE
 router.post("/addOrder", async (req, res) => {
-    
-    
+
+ const laundry_basket = req.body.laundry_basket
+  const customers = req.body.customers
+  const employee = req.body.employee
+  const orderpickup_date = req.body.orderpickup_date
+  const order_total = req.body.order_total
+
+  console.log(laundry_basket)
+  console.log(employee)
+  console.log(orderpickup_date)
+  console.log(order_total)
+  console.log(customers)
+
+  let query1 = "INSERT INTO orders(customer_ID, employee_ID, order_status, order_date, orderpickup_date, order_total, payment_status, emarks) VALUE (?, ?, ?, ? , ? ,? ,? ,?)";
+
+  db.query(query1, [customers.customer_ID,employee.employee_ID,"Pending",new Date(),orderpickup_date,order_total], (err, result) => {
+    if (err) {
+      res.send({ err: err });
+    } else {
+      res.send({ message: "Data uploaded successfully" });
+    }
+
 });
+
+})
+ 
 
 
 router.get ('/orders', async (req,res)=>{

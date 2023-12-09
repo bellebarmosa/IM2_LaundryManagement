@@ -15,7 +15,6 @@ const App = () => {
 
   Axios.defaults.withCredentials = true;
   useEffect(() => {
-  
     const checkToken = async () => {
       try {
         // 
@@ -77,8 +76,6 @@ const App = () => {
 
   return (
     <>
-        
-    
     <div className="wrapper"></div>
       {renderLayout()}
     </>

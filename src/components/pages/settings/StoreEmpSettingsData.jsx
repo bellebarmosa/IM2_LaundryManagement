@@ -23,7 +23,7 @@ const StoreEmpSettingsData = () => {
     // Fetch employee profile data from the server (replace with actual API call)
     const fetchEmployeeProfile = async () => {
       // Mock API call
-      const response = await fetch('http://localhost:3001/user/employeeProfile');
+      const response = await fetch('http://localhost:3001/user/employeeProfile',{  withCredentials: true,});
       const data = await response.json();
       setEmployeeProfile(data);
     };

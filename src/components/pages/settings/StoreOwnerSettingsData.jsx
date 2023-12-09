@@ -20,7 +20,7 @@ const StoreOwnerSettings = () => {
 
   useEffect(() => {
     const fetchStoreOwnerProfile = async () => {
-      const response = await fetch('http://localhost:3001/user/storeOwnerProfile');
+      const response = await fetch('http://localhost:3001/user/storeOwnerProfile',{  withCredentials: true,});
       const data = await response.json();
       setStoreOwnerProfile(data);
     };

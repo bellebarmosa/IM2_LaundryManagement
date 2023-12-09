@@ -12,6 +12,7 @@ import svgTowels from '../../assets/towels.png'
 import svgCurtains from '../../assets/curtains.png'
 import svgRags from '../../assets/rags.png'
 import svgSuits from '../../assets/suits.png'
+import PaymentModal from '../modals/PaymentModal';
 
 
 const Icon = ({svgName}) => {
@@ -161,6 +162,13 @@ const POS = () => {
   const [customers, setCustomers] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [selectedPickupDate, setSelectedPickupDate] = useState('');
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [user,setUser] = useState();
+  const [paymentDetails, setPaymentDetails] = useState({
+  orderTotal: 0,
+  paidStatus: false,
+  remarks: "",
+});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -180,7 +188,7 @@ const POS = () => {
           Suits: svgSuits,
           // Add more as needed
         };
-
+        
         // Define mapBackendDataToClothesType here
         const mapBackendDataToClothesType = (backendData, svgMappings) => {
           return backendData.map((item) => ({
@@ -216,11 +224,17 @@ const POS = () => {
       }
     };
     // Call the function to fetch customer states
+    console.log(customers)
     fetchCustomerStates();
   }, []);
 
-
-
+  const handleChangeCustomer = (e) => {
+    const selectedCustomerID = e.target.value;
+    console.log('Selected Customer ID:', selectedCustomerID);
+    const selectedCustomerObject = customers.find(customer => customer.customer_ID === Number(selectedCustomerID));
+    setSelectedCustomer(selectedCustomerObject);
+    console.log('Selected Customer:', selectedCustomerObject);
+  };
   const addLaundryItems = (items) => {
     setLaundryItems([...laundryItems, items]);
   };
@@ -258,24 +272,53 @@ const POS = () => {
     return finalTotalValue;
   };
 
-  const paymentHandler = () =>{
-    // console.log("Order Confirmed");
-    //   Axios.post("http://localhost:3001/order/addOrder", { 
-    //     newOrder:serviceCart,
-    //     customer: selectedCus,
-    //     employee: user,
-    //     total: total,
-    //     order_pickUP: pickUpDate,
-    //     order_paidAmount: paidAmount })
-    //   .then((response)=>{
-    //     console.log(response);
-    //   })
-    console.log(selectedCustomer)
-    console.log(selectedPickupDate)
+  
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await Axios.get('http://localhost:3001/user/profile', { withCredentials: true });
+        if (response.data.user) {
+          setUser(response.data.user);
+        } else {
+          console.error('User data not present in the response:', response.data);
+        }
+      } catch (error) {
+        console.error('Token check error:', error);
+        navigate('/');
+      }
+    };
+    checkToken();
+   }, []);
 
 
+   const paymentHandler = () => {
+    // Open the payment modal
+    setShowPaymentModal(true);
+  };
+   const handlePaymentConfirmation = (details) => {
+    // Upload the order details to the server
+    Axios.post("http://localhost:3001/order/addOrder", {
+      laundry_basket: laundryItems,
+      customers: selectedCustomer,
+      employee: user, // Ensure you have the necessary data for the employee
+      orderpickup_date: selectedPickupDate,
+      order_total: finalTotal,
+      paidStatus: details.paidStatus,
+      remarks: details.remarks,
+    })
+      .then((response) => {
+        console.log(response);
+        // Handle success response if needed
+      })
+      .catch((error) => {
+        console.error(error);
+        // Handle error if needed
+      });
+
+    // Clear the laundry items and close the modal after confirming
     setLaundryItems([]);
-  }
+    setShowPaymentModal(false);
+  };
 
   useEffect(() => {
     const subtotalValue = calculateSubtotal();
@@ -320,10 +363,20 @@ const POS = () => {
     }
     return rows;
   };
+  
   return (
     <div className="w-full h-full flex flex-row px-8 p-3 bg-brightYellow rounded-b-3xl gap-3">
     <div className="bg-screenYellow rounded-3xl w-3/5 p-4 pl-5">
-    
+    {showPaymentModal && (
+        <PaymentModal
+          show={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          orderTotal={finalTotal}
+          paidStatus={false} // Initial paid status, you can set it based on your logic
+          remarks=""
+          onConfirm={handlePaymentConfirmation}
+        />
+      )}
 
       {ClothesType && renderClothesTypeRows()}
     </div>
@@ -351,18 +404,18 @@ const POS = () => {
     Select Customer State:
   </label>
   <select
-    id="customerStateDropdown"
-    className="w-full h-10 px-4 border rounded-md bg-white focus:outline-none focus:border-blue-500"
-    value={selectedCustomer}
-    onChange={(e) => setSelectedCustomer(e.target.value)}
-  >
-    <option value="">Select...</option>
-    {customers.map((customer) => (
-      <option key={customer.customer_ID} value={customer.customer_name}>
-        {customer.customer_name}
-      </option>
-    ))}
-  </select>
+  id="customerStateDropdown"
+  className="w-full h-10 px-4 border rounded-md bg-white focus:outline-none focus:border-blue-500"
+  value={selectedCustomer ? selectedCustomer.customer_ID : ''}
+  onChange={handleChangeCustomer}
+>
+  <option value="">Select...</option>
+  {customers && customers.map((customer) => (
+    <option key={customer.customer_ID} value={customer.customer_ID}>
+      {customer.customer_name}
+    </option>
+  ))}
+</select>
 </div>
 
         </div>
@@ -410,6 +463,7 @@ const POS = () => {
           </div>
         </div>
       </div>
+    
     </div>
   )
 }
