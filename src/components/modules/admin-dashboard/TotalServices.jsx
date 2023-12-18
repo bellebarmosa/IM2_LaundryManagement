@@ -9,7 +9,6 @@ const TotalServicesComponent = () => {
     Axios.get("http://localhost:3001/order/services")
     .then((response)=>{
       if(response.err){
-        console.log(response.err)
       }else{
         setTotalServices(response.data);
       }

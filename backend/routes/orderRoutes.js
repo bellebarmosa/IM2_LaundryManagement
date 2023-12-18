@@ -17,6 +17,7 @@ router.get ('/orders',orderController);
 router.post("/customers",orderController);
 router.delete('/customers/:customerId',orderController);
 router.put('/customers/:customerId',orderController);
+router.get('/priceList',orderController);
 
 
 // router.put('/editOrder/:orderId',orderController)
