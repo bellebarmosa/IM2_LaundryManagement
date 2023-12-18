@@ -4,13 +4,12 @@ const router = express.Router();
 const orderController = require("../controllers/orderController");
 
 router.get("/services", orderController);
-router.get("/clothetype", orderController);
+router.get("/garments", orderController);
 router.get("/customers", orderController);
 router.post("/addOrder", orderController);
 router.post("/services",orderController);
 router.put('/editService/:serviceID',orderController);
 router.get('/totalorders',orderController);
-router.get ('/pendingorders',orderController);
 router.get ('/recentorders',orderController);
 router.put('/editorder/:orderId',orderController);
 router.delete('/deleteService/:serviceId',orderController)

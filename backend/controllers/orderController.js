@@ -1,13 +1,11 @@
 
 const express = require("express");
 const db = require("../models/db");
+
 const router = express.Router();
-const verifyToken = require("../middleware/verifyToken"); // Import the middleware
-/////////////////////////////////////////////////////////////////////////
-//ADDD VERIFICATIONNNNNNN
-/////////////////////////////////////////////////////////////////////////
+
 router.get("/services", async(req, res) => {
-  
+ 
     db.query("SELECT * FROM services", (err, result) => {
         if (err) {
             res.send({ err: err });
@@ -21,15 +19,15 @@ router.get("/services", async(req, res) => {
     });
 });
 
-//////////////////////////////////////////////////////WORKS
 router.post('/services',async (req,res)=>{
     try{
-        let addService = "INSERT INTO `services`(`service_name`, `serviceBase_Price`) VALUES (?,?)";
+        let addService = "INSERT INTO `services`(`service_name`, `service_description`, `service_price`) VALUES (? , ? , ?)";
         const service_name= req.body.service_name;
-        const serviceBase_Price = req.body.serviceBase_Price;
+        const service_description = req.body.service_description;
+        const service_price = req.body.service_price;
 
         db.query(addService,
-            [service_name,serviceBase_Price],
+            [service_name,service_description,service_price],
             (err,result)=>{
                 if (err) {
                     console.error(err);  // Log the error for debugging
@@ -43,7 +41,7 @@ router.post('/services',async (req,res)=>{
 
     }
     })
-//////////////////////////////////////////////////////WORKS
+
     router.put('/editservice/:serviceId', async (req, res) => {
       try {
         // Extract parameters from the request
@@ -51,13 +49,14 @@ router.post('/services',async (req,res)=>{
         const updatedService = req.body;
     
         // Update the service in the database
-        const updateServiceQuery = `UPDATE services SET service_name= ?,serviceBase_Price=? WHERE 1`;
+        const updateServiceQuery = `UPDATE services SET service_name = ?,service_description = ?,service_price = ? WHERE service_ID = ?;`;
     
         db.query(
           updateServiceQuery,
           [
             updatedService.service_name,
-            updatedService.serviceBase_Price,
+            updatedService.service_description,
+            updatedService.service_price,
             serviceId,
           ],
           (err, result) => {
@@ -78,26 +77,21 @@ router.post('/services',async (req,res)=>{
 
 
 
-//////////////////////////////////////////////////////IT SHOULD WORK?
+
     router.put('/editorder/:orderId', async (req, res) => {
       try {
         const { orderId } = req.params;
         const { updatedData } = req.body;
     
         const updateOrderQuery =
-          'INSERT INTO `orders`(`customer_ID`, `employee_ID`, `order_status`,`orderpickup_date`, `order_total`, `payment_status`, `Remarks`)VALUES (?,?,?,?,?,?,?)';
+          'UPDATE orders SET order_total = ?, order_paidAmount = ?, order_status = ? WHERE order_ID = ?';
     
         db.query(
           updateOrderQuery,
           [
-            updatedData.customer_ID,
-            updatedData.employee_ID,
-            updatedData.order_status,
-            updatedData.orderpickup_date,
             updatedData.order_total,
-            updatedData.payment_status,
-            updatedData.Remarks,
-      
+            updatedData.order_paidAmount,
+            updatedData.order_status,
             orderId,
           ],
           (err, result) => {
@@ -120,26 +114,20 @@ router.post('/services',async (req,res)=>{
 
 
 
-router.get("/clothetype",async (req, res) => {
-  try{
-    db.queryAsync("SELECT * FROM clothetype", (err, result) => {
-      if (err) {
-          res.send({ err: err });
-      } else {
-          if (result.length > 0) {
-              res.send(result);
-          } else {
-              res.send({ message: "No garments found" });
-          }
-      }
-  });
+router.get("/garments",async (req, res) => {
 
-  }catch(err){
-    res.send({err:err});
-  }
-  
+    db.query("SELECT * FROM garments", (err, result) => {
+        if (err) {
+            res.send({ err: err });
+        } else {
+            if (result.length > 0) {
+                res.send(result);
+            } else {
+                res.send({ message: "No garments found" });
+            }
+        }
+    });
 });
-
 
 router.get("/customers",async(req, res) => {
   
@@ -156,7 +144,6 @@ router.get("/customers",async(req, res) => {
     });
 });
 
-//////////////////////////////////////////////////////TO CHANGE
 router.post("/customers", async (req, res) => {
   const insertCustomersQuery =
     "INSERT INTO `customers`(`customer_name`, `customer_phone`, `customer_eMail`) VALUES (?,?,?)";
@@ -179,7 +166,6 @@ router.post("/customers", async (req, res) => {
   );
 });
 
-//////////////////////////////////////////////////////TO CHANGE
 router.put('/customers/:customerId', async (req, res) => {
   try {
     const { customerId } = req.params;
@@ -212,7 +198,7 @@ router.put('/customers/:customerId', async (req, res) => {
 });
 
 
-//////////////////////////////////////////////////////TO CHANGE
+
 router.delete('/customers/:customerId', async (req, res) => {
   try {
     const { customerId } = req.params;
@@ -232,8 +218,55 @@ router.delete('/customers/:customerId', async (req, res) => {
   }
 });
 
-//////////////////////////////////////////////////////TO CHANGE
+
 router.post("/addOrder", async (req, res) => {
+<<<<<<< Updated upstream
+  
+    try {
+        const newOrder = req.body.newOrder;
+        const customer = req.body.customer;
+        const employee = req.body.employee;
+        const total = req.body.total;
+        const order_pickUP = req.body.order_pickUP;
+        const order_paidAmount = req.body.order_paidAmount;
+    
+         db.beginTransaction();
+    
+        const insertOrderQuery =
+          "INSERT INTO `orders`(`customer_ID`, `employee_ID`, `order_date`, `order_pickup`, `order_total`, `order_paidAmount`) VALUES (?, ?, ?, ?, ?, ?)";
+    
+        const result1 = await db.queryAsync(insertOrderQuery, [
+          customer.customer_ID,
+          employee.employee_ID,
+          new Date(),
+          order_pickUP,
+          total,
+          order_paidAmount,
+        ]);
+    
+        const orderID = result1.insertId;
+    
+        for (const orderDetails of newOrder) {
+          const insertOrderDetailsQuery =
+            "INSERT INTO `orderdetails`(`order_ID`, `quantity`, `order_price`, `service_ID`,`chargePer`) VALUES ?";
+          const bulkOrderDetails = [                                                  
+            [orderID, orderDetails.qty, orderDetails.amount, orderDetails.service_ID,orderDetails.chargePer],
+          ];
+    
+          const result2 = await db.queryAsync(insertOrderDetailsQuery, [bulkOrderDetails]);
+    
+          const detailID = result2.insertId;
+    
+          const garmentsInOrder =
+            "INSERT INTO `garmentsinorder`(`orderDetails_ID`, `garment_ID`,`qty`) VALUES ?";
+          const bulkGarmentsOrder = orderDetails.garmentsIn.map((garments) => [
+            detailID,
+            garments.garment_ID,
+            garments.quantity,
+          ]);
+    
+          const result3 = await db.queryAsync(garmentsInOrder, [bulkGarmentsOrder]);
+=======
   const laundry_basket = req.body.laundry_basket;
   const customers = req.body.customers;
   const employee = req.body.employee;
@@ -322,7 +355,6 @@ router.get('/pendingorders', async (req, res) => {
 
 router.get ('/recentorders', async(req,res)=>{
   let query = "SELECT * FROM orders WHERE order_status = 'Finished' LIMIT 10;"
-  
   try {
     const result = await db.queryAsync(query);
     if (result.length > 0) {
@@ -358,16 +390,84 @@ router.put('/editorder/:orderId', async (req, res) => {
           res.status(500).send({ error: 'Internal Server Error' });
         } else {
           res.send(result);
+>>>>>>> Stashed changes
         }
+    
+        await db.commitAsync();
+    
+        res.send({ message: "Data uploaded successfully" });
+      } catch (error) {
+        await db.rollbackAsync();
+    
+        res.status(500).send({ error: error.message });
       }
-    );
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: 'Internal Server Error' });
-  }
 });
 
-//////////////////////////////////////////////////////TO CHANGE
+router.get('/totalorders',async (req,res)=>{
+  let query="SELECT COUNT(*) as TotalOrders FROM orders";
+
+  db.query(query,(err,result) => {
+    if (err) {
+        res.send({ err: err });
+    } else {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send({ message: "No ordersfound" });
+        }
+    }
+});
+});
+
+router.get ('/orders', async (req,res)=>{
+  let query = "SELECT * FROM orders"
+
+  db.query(query,(err,result) => {
+    if (err) {
+        res.send({ err: err });
+    } else {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send({ message: "No orders found" });
+        }
+    }
+});
+});
+
+// router.put('/editorder/:orderId', async (req, res) => {
+//   try {
+//     const { orderId } = req.params;
+//     const { updatedData } = req.body;
+
+//     const updateOrderQuery =
+//       'UPDATE orders SET  order_total = ?, order_paidAmount = ?, order_status = ? WHERE order_ID = ?';
+
+//     db.query(
+//       updateOrderQuery,
+//       [
+//         updatedData.orderInfo,
+//         updatedData.order_total,
+//         updatedData.order_paidAmount,
+//         updatedData.storeName,
+//         updatedData.order_status,
+//         orderId,
+//       ],
+//       (err, result) => {
+//         if (err) {
+//           console.error(err);
+//           res.status(500).send({ error: 'Internal Server Error' });
+//         } else {
+//           res.send(result);
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ error: 'Internal Server Error' });
+//   }
+// });
+
 router.delete('/deleteService/:serviceId', async (req, res) => {
   try {
     const { serviceId } = req.params;
@@ -389,10 +489,54 @@ router.delete('/deleteService/:serviceId', async (req, res) => {
   }
 });
 
+// const db = require('../path/to/your/db-module');
+
+// // Define the route for updating an order
+// router.put('/order/editorder/:orderId', async (req, res) => {
+//   try {
+//     const { orderId } = req.params;
+//     const updatedData = req.body;
+
+//     // Update the order in the database
+//     const updateOrderQuery = `
+//       UPDATE orders
+//       SET order_total = ?,
+//           order_status = ?,
+//           order_paidAmount = ?,
+//           storeName = ?
+//       WHERE order_ID = ?;
+//     `;
+
+//     db.query(
+//       updateOrderQuery,
+//       [
+//         updatedData.order_total,
+//         updatedData.order_status,
+//         updatedData.order_paidAmount,
+//         updatedData.storeName,
+//         orderId,
+//       ],
+//       (err, result) => {
+//         if (err) {
+//           console.error(err);
+//           res.status(500).send({ error: 'Internal Server Error' });
+//         } else {
+//           res.status(200).send({ message: 'Order updated successfully' });
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ error: 'Internal Server Error' });
+//   }
+// });
 
 
 
 
+<<<<<<< Updated upstream
+
+=======
 //////////////////////////////////////////////////////TO CHANGE
 router.get('/priceList', async (req,res)=>{
   try{
@@ -410,6 +554,7 @@ router.get('/priceList', async (req,res)=>{
   }catch(err){
     res.status(500).send({ error: 'Internal Server Error' });
   }
+>>>>>>> Stashed changes
 
 });
 

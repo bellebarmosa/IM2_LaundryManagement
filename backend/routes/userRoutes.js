@@ -11,7 +11,5 @@ router.get("/employees",userController);
 router.put('/edit/:employeeID',userController);
 router.get('/totalsales',userController)
 router.delete('/delete/:employeeId',userController);
-router.get('/totalorders',userController);
-router.get('/totalsales',userController);
 
 module.exports = router;

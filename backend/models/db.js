@@ -6,7 +6,7 @@ const db = mysql.createConnection({
     user: "root",
     host: "localhost",
     password: "",
-    database: "basketpos_final",
+    database: "basket1_pos",
 });
 
 db.beginTransactionAsync = util.promisify(db.beginTransaction);

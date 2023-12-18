@@ -1,84 +1,52 @@
-import React, { useState,useEffect } from 'react'
-import Login from './components/pages/Login'
-import Axios from 'axios';
-import { AdminLayout } from './components/layouts/AdminLayout';
-import {CustomerLayout} from './components/layouts/CustomerLayout';
-import {StoreEmployeeLayout} from './components/layouts/StoreEmployeeLayout';
-import {StoreOwnerLayout} from './components/layouts/StoreOwnerLayout';
-import { Route, Routes, useNavigate } from 'react-router';
+import { useEffect, useState } from 'react'
+import Axios from 'axios'
+import './App.css'
+import {BrowserRouter as Router, Route,Routes } from 'react-router-dom'
+import Login from './components/Login'
+import PosPage from './components/posPage'
+import popUPgarment from './components/PopUPgarment'
+import Signup from './components/Signup'
+import AdminOrders from './components/pages/AdminOrders'
+import AdminCustomers from './components/pages/AdminCustomers'
+import AdminEmployees from './components/pages/AdminEmployees'
+import AdminServices from './components/pages/AdminServices'
+import AdminDashboard from './components/pages/AdminDashboard'
+import RecentOrders from './components/modules/admin-dashboard/RecentOrdersAdmin'
+import OrderDetails from './components/OrderDetails'
 
-const App = () => {
-  const navigate =useNavigate()
-  const [userType, setUserType] = useState('');
-  const [loggedIn, setLoggedIn] = useState();
-  const [navbarData, setnavbarData] = useState({});
 
-  Axios.defaults.withCredentials = true;
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        // 
-        const response = await Axios.get('http://localhost:3001/user/profile', { withCredentials: true });
-        if (response.data.user) {
-          // Token exists, set user type and navbar data
-          setUserType(response.data.user.employee_role);
-          setnavbarData([
-            {
-              currentPage: 'Dashboard', //idk onsa dri??
-              name: response.data.user.employee_name,
-              email: response.data.user.employee_eMail,
-            },
-          ]);
-        }
-        console.log(response.data.user)
-      } catch (error) {
-        console.error('Token check error:', error);
-        navigate('/')
-
-      }
-    };
-    checkToken();
-   }, []);
-
-  
-
-  
-  // const userType = 'storeOwner';//BACKEND CHANGE ME
-  /* userType VALUES SHOULD ONLY BE:
-    - 'admin'
-    - 'storeOwner'
-    - 'storeEmployee'
-    - 'customer'
-  */
-  const handleLogin = (userType) => {
-    setUserType(userType);
-  };
-  // setnavbarData[{ 
-  //   currentPage: 'Dashboard', 
-  //   name: 'storeOwner', 
-  //   email: 'admin@usc.edu.ph'   
-  // }]//BACKEND CHANGE ME
-
-  const renderLayout = () => {
-    switch (userType) {
-      case 'admin':
-        return <AdminLayout userType={userType} navbarData={navbarData}/>;
-      case 'customer':
-        return <CustomerLayout userType={userType} navbarData={navbarData}/>;
-      case 'storeOwner':
-        return <StoreOwnerLayout userType={userType} navbarData={navbarData}/>;
-      case 'storeEmployee':
-        return <StoreEmployeeLayout userType={userType} navbarData={navbarData}/>;
-      default:
-        return <Login/>;
-    }
-  };
+function App() {
 
   return (
-    <>
-    <div className="wrapper"></div>
-      {renderLayout()}
-    </>
+  <Router>
+    <div className='App'>
+
+      <Routes>
+
+
+      <Route exact path='/OrderDetails/:id' Component={OrderDetails}/>
+      <Route exact path='/AdminCustomers' Component={AdminCustomers}/>
+      <Route exact path='/RecentOrders' Component={RecentOrders}/>
+      <Route exact path='/AdminDashboard' Component={AdminDashboard}/>
+        
+      <Route exact path='/AdminServices' Component={AdminServices}/>
+        <Route exact path='/AdminOrders' Component={AdminOrders}/>
+        <Route exact path='/admin-employees' Component={AdminEmployees}/>
+
+        <Route exact path='/' Component={Login}/>
+
+        <Route exact path='/pos' Component={PosPage}/>
+
+        <Route exact path='/signup' Component={Signup}/>
+        
+    
+
+      </Routes>
+
+
+    </div>
+  </Router>
+   
   )
 }
 
