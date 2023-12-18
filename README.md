@@ -10,7 +10,15 @@ Currently, two official plugins are available:
 
 To run the app:
 
-Open a terminal and then:
+DOWNLOAD AND IMPORT basketpos_final(3).sql
 
+
+Open a terminal and then:
 npm install
 npm run dev
+
+Open another terminal 
+cd backend
+npm run dev
+
+
