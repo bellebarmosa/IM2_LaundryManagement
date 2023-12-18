@@ -2,33 +2,36 @@ const express = require("express");
 const db = require("../models/db");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-
-
-
-router.get('/profile', (req, res) => {
-   
-    if (req.session.user){
-        res.send({user: req.session.user});
-    }else{
-        res.status(401).json({ message: 'Not authenticated' });
-    }
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const verifyToken = require("../middleware/verifyToken"); // Import the middleware
+/////////////////////////////////////////////////////////////////////////
+//ADDD VERIFICATIONNNNNNN
+/////////////////////////////////////////////////////////////////////////
+router.get('/profile', verifyToken, (req, res) => {
+  res.send({ user: req.user });
 });
 
-router.get('/employees', async (req,res)=>{
+router.get('/employees', verifyToken ,async (req,res)=>{
+   if(req.user.employee_role === "admin" || req.user.employee_role === "storeOwner"){  
     db.query("SELECT * FROM employees", (err, result) => {
-        if (err) {
-            res.send({ err: err });
-        } else {
-            if (result.length > 0) {
-                res.send(result);
-            } else {
-                res.send({ message: "No customers found" });
-            }
-        }
-    });
-
+      if (err) {
+          res.send({ err: err });
+      } else {
+          if (result.length > 0) {
+              res.send(result);
+          } else {
+              res.send({ message: "No customers found" });
+          }
+      }
+  });
+  }else{
+    res.send({ message: "Invalid Access" });
+  }
 })
-router.put('/edit/:employeeID', async (req, res) => {
+/////////////////////////////////////////WORKS
+router.put('/edit/:employeeID',verifyToken ,async (req, res) => {
+  console.log(req.params.employeeID)//
     try {
       const employeeID = req.params.employeeID;
 
@@ -80,6 +83,8 @@ router.put('/edit/:employeeID', async (req, res) => {
     }
   });
 
+  
+  //adds employees WORKS
   router.post('/register', async (req, res) => {
     try {
       const salt = await bcrypt.genSalt();
@@ -113,7 +118,7 @@ router.put('/edit/:employeeID', async (req, res) => {
       res.status(500).send({ error: 'Internal Server Error' });
     }
   });
-  
+  //////////////////WORKS
   router.delete('/delete/:employeeId', async (req, res) => {
     try {
       const { employeeId } = req.params;
@@ -135,62 +140,79 @@ router.put('/edit/:employeeID', async (req, res) => {
     }
   });
 
-router.get("/login", (req, res) => {
-    
-    if(req.session.user){
-        res.send({loggedIn: true, user: req.session.user});
-    }else{
-        res.send({loggedIn: false});
+
+
+  
+  //////////////////WORKS
+router.post('/login', async (req, res) => {
+  const { employee_eMail, employee_password } = req.body;
+
+  db.queryAsync(
+    'SELECT * FROM employees WHERE employee_eMail = ?',
+    [employee_eMail],
+    async (err, result) => {
+      if (err) {
+        res.send({ err: err });
+      }
+
+      if (result.length > 0) {
+        const isPasswordMatch = await bcrypt.compare(
+          employee_password,
+          result[0].employee_password
+        );
+        console.log(isPasswordMatch)
+        if (isPasswordMatch) {
+          const user = {
+            employee_ID: result[0].employee_ID,
+            employee_name: result[0].employee_name,
+            employee_role: result[0].employee_role,
+            employee_eMail: result[0].employee_eMail,
+            employee_phone: result[0].employee_phone,
+            employee_password:result[0].employee_password
+          };
+
+          console.log(user)
+          const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' }); 
+          res.cookie('token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 }); // Set cookie with token
+          return res.send({ Auth: true, token});
+        } else {
+          res.send({ Auth: false, message: 'Invalid credentials' });
+        }
+      } else {
+        res.send({ Auth: false, message: 'User not found' });
+      }
     }
+  );
 });
 
-router.post("/login", async (req, res) => {
-    const employee_eMail = req.body.employee_eMail;
-    const employee_password = req.body.employee_password;
+router.get('/totalsales',async (req,res)=>{
 
-    db.query(
-        "SELECT * FROM employees WHERE employee_eMail = ?",
-        [employee_eMail],
-        async (err, result) => {
-            if (err) {
-                res.send({ err: err });
-            }
-
-            if (result.length > 0) {
-                const isPasswordMatch = await bcrypt.compare(
-                    employee_password,
-                    result[0].employee_password
-                );
-
-                console.log(result[0])
-                console.log(isPasswordMatch)
-                console.log(employee_password)
-
-                if (isPasswordMatch) {
-                    req.session.user = result;
-                    return res.send(result);
-                } else {
-                    res.send({ message: "DID NOT COMPARE" });
-                }
-            } else {
-                res.send({ message: "Wrong user/password2" });
-            }
-        }
-    );
-});
-
-
-router.get('/totalsales', async (req,res)=>{
-
-    db.query("SELECT SUM(order_total) AS totalsales FROM `orders` " ,(err,result)=>{
-        if (err) {
-            res.send({ err: err });
-        }else{
-            res.send(result);
-        }
-    })
+  db.query("SELECT SUM(order_total) AS totalsales FROM `orders` " ,(err,result)=>{
+      if (err) {
+          res.send({ err: err });
+      }else{
+          res.send(result);
+      }
+  })
 })
 
-router.get('/customers')
+
+router.get('/totalorders', async (req,res)=>{
+  let query="SELECT COUNT(*) as TotalOrders FROM orders";
+
+  db.query(query,(err,result) => {
+    if (err) {
+        res.send({ err: err });
+    } else {
+        if (result.length > 0) {
+            res.send(result);
+        } else {
+            res.send({ message: "No ordersfound" });
+        }
+    }
+});
+});
+
+
 
 module.exports = router;
